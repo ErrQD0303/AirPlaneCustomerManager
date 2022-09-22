@@ -10,6 +10,8 @@
 using namespace std;
 
 void MainMenu() {
+	airCraftList* AC = new airCraftList();
+	readAirCraftFile(AC);
 main_menu:
 	showCur(0);
 	flushConsoleInputBuffer();
@@ -127,7 +129,7 @@ main_menu:
 	} while (inputChar != 13);
 	switch (key) {
 	case 1: {
-		PMMainInterface();
+		PMMainInterface(AC);
 		break;
 	}
 	case 2: {
@@ -135,6 +137,8 @@ main_menu:
 		break;
 	}
 	case 9:
+		delete AC;
+		AC = nullptr;
 		return;
 	}
 	goto main_menu;

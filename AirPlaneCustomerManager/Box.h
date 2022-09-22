@@ -18,6 +18,8 @@ void PMMainBox() {
 	gotoxy(35, 28); std::cout << "<F3>: EDIT";
 	boxnho(47, 65, 27, 29);
 	gotoxy(49, 28); std::cout << "<DELETE>: DELETE";
+	boxnho(95, 117, 27, 29);
+	gotoxy(97, 28); std::cout << "PAGE: ";
 }
 
 void PMSearchBox() {
@@ -32,6 +34,17 @@ void PMSearchBox() {
 	gotoxy(97, 28); std::cout << "PAGE: ";
 	gotoxy(97, 3); std::cout << "AIRCRAFT TYPE LIST";
 	gotoxy(14, 3); std::cout << "Search Aircraft By Number: ";
+}
+
+void PMAddBox() {
+	boxnho(5, 29, 4, 6); 
+	gotoxy(7, 5); std::cout << "Press <ESC> to go back";
+	gotoxy(55, 4); std::cout << "ADD PLANE";
+	boxnho(86, 117, 4, 6);
+	boxnho(34, 85, 8, 14);
+	gotoxy(40, 11); std::cout << "Plane Number:";
+	gotoxy(40, 12); std::cout << "Plane Total Seats:";
+	gotoxy(40, 10); std::cout << "Plane Type: ";
 }
 
 void boxnho(int x1, int x2, int y1, int y2) {

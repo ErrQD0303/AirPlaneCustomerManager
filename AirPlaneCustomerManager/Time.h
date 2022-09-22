@@ -19,7 +19,12 @@ void curTime(int& year, int& month,
 void menuCurTime() {
 	int year, month, day, hour, min;
 	curTime(year, month, day, hour, min);
-	gotoxy(85, 0); cout << hour;
+	if (hour >= 10) {
+		gotoxy(85, 0); cout << hour;
+	}
+	else {
+		gotoxy(85, 0); cout << "0" << hour;
+	}
 	gotoxy(87, 0);
 	if (min < 10)
 		cout << ":0" << min;

@@ -4,8 +4,6 @@
 
 int main() {
 	MainMenu();
-	/*char inputChar = _getch();
-	if (inputChar == 127)
-		PMAddInterface();*/
+	//PMAddInterface();
 	return 0;
 }
