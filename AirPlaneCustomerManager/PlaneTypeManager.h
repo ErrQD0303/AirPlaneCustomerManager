@@ -423,4 +423,3 @@ void airCraftList::PMPrintPlaneTypeInforSearchInterface(char* c, int _count, vec
 	}
 	gotoxy(103, 28); std::cout << page + 1 << "/" << _count / 19 + 1;
 }
-//
