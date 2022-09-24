@@ -10,6 +10,7 @@
 using namespace std;
 
 void MainMenu() {
+	SetConsoleTitle(L"Aircraft Manager 2.0");
 	airCraftList* AC = new airCraftList();
 	readAirCraftFile(AC);
 main_menu:
