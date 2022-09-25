@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <string>
 #include <stdio.h>
+#include <conio.h>
 
 void boxnho(int, int, int, int);
 void PMboxtong();
@@ -57,6 +58,14 @@ void PMEditBox() {
 	gotoxy(40, 12); std::cout << "Plane Total Seats:";
 	gotoxy(40, 13); std::cout << "Save and Exit";
 	gotoxy(40, 10); std::cout << "Plane Type: ";
+}
+
+void PMSaveBox() {
+	boxnho(40, 80, 10, 15);
+	gotoxy(50, 11); std::cout << "DO YOU WANT TO SAVE?";
+	gotoxy(60, 12); std::cout << "YES";
+	gotoxy(60, 13); std::cout << "NO";
+	gotoxy(56, 12); std::cout << "==>";
 }
 
 void boxnho(int x1, int x2, int y1, int y2) {

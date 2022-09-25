@@ -8,6 +8,7 @@
 #include <conio.h>
 #include "ReadAndWriteFiles.h"
 #include <vector>
+#include <ctime>
 
 void PMAddInterface(airCraftList*);
 void PMEditInterface(airCraftList*);
@@ -212,7 +213,70 @@ void PMEditInterface1(airCraftList* AC, int& key, int pos) {
 				}
 			} while ((atoi(totalSeats) <= 0 || atoi(totalSeats) > 200) && key == 2);
 			if (key == 3) {
-				AC->editAirCraft(planeNumber, planeType, atoi(totalSeats), pos);
+				system("cls");
+				showCur(0);
+				menuCurTime();
+				PMSaveBox();
+				int inpt = 0;
+				do {
+					inputChar = _getch();
+					if (inputChar == 72)
+						if (inpt == 1) {
+							gotoxy(56, 12 + inpt); std::cout << "   ";
+							inpt--;
+							gotoxy(56, 12 + inpt); std::cout << "==>";
+						}
+						else {
+							gotoxy(56, 12 + inpt); std::cout << "   ";
+							inpt = 1;
+							gotoxy(56, 12 + inpt); std::cout << "==>";
+						}
+					if (inputChar == 80)
+						if (inpt == 0) {
+							gotoxy(56, 12 + inpt); std::cout << "   ";
+							inpt++;
+							gotoxy(56, 12 + inpt); std::cout << "==>";
+						}
+						else {
+							gotoxy(56, 12 + inpt); std::cout << "   ";
+							inpt = 0;
+							gotoxy(56, 12 + inpt); std::cout << "==>";
+						}
+					if (inputChar == 27) {
+						system("cls");
+						PMEditBox(); 
+						gotoxy(53, 10); std::cout << ((planeType[0] == '\0' || planeType[0] == '.' || planeType[0] == -51) ?AC->getACType(pos) : planeType);
+						gotoxy(54, 11); std::cout << ((planeNumber[0] == '\0' || planeNumber[0] == '.' || planeNumber[0] == -51) ?AC->getACNumber(pos) : planeNumber);
+						gotoxy(59, 12); std::cout << ((totalSeats[0] == '\0' || totalSeats[0] == '.' || totalSeats[0] == -51) ?AC->getTotalSeats(pos) : atoi(totalSeats));
+						goto editI;
+					}
+					if (inputChar == 13)
+						break;
+				} while (1);
+				switch (inpt) {
+				case 0: {
+					AC->editAirCraft(planeNumber, planeType, atoi(totalSeats), pos);
+					system("cls");
+					gotoxy(55, 13);
+					std::cout << "Saving";
+					Sleep(400);
+					std::cout << ".";
+					Sleep(400);
+					std::cout << ".";
+					Sleep(400);
+					std::cout << ".";
+					Sleep(400);
+					break;
+				}
+				case 1: {
+					system("cls");
+					PMEditBox();
+					gotoxy(53, 10); std::cout << ((planeType[0] == '\0' || planeType[0] == '.' || planeType[0] == -51) ? AC->getACType(pos) : planeType);
+					gotoxy(54, 11); std::cout << ((planeNumber[0] == '\0' || planeNumber[0] == '.' || planeNumber[0] == -51) ? AC->getACNumber(pos) : planeNumber);
+					gotoxy(59, 12); std::cout << ((totalSeats[0] == '\0' || totalSeats[0] == '.' || totalSeats[0] == -51) ? AC->getTotalSeats(pos) : atoi(totalSeats));
+					goto editI;
+				}
+				}
 				break;
 			}
 		}
