@@ -47,6 +47,18 @@ void PMAddBox() {
 	gotoxy(40, 10); std::cout << "Plane Type: ";
 }
 
+void PMEditBox() {
+	boxnho(5, 36, 4, 6);
+	gotoxy(7, 5); std::cout << "Press <ESC> exit without save";
+	gotoxy(55, 4); std::cout << "EDIT PLANE";
+	boxnho(86, 117, 4, 6);
+	boxnho(34, 85, 8, 15);
+	gotoxy(40, 11); std::cout << "Plane Number:";
+	gotoxy(40, 12); std::cout << "Plane Total Seats:";
+	gotoxy(40, 13); std::cout << "Save and Exit";
+	gotoxy(40, 10); std::cout << "Plane Type: ";
+}
+
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
 	std::cout << char(218) << std::setw(x2 - x1) << std::setfill(char(196))

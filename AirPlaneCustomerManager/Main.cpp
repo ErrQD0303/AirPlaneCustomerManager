@@ -3,7 +3,6 @@
 #include "MainMenu.h"
 
 int main() {
-	MainMenu();
-	//PMAddInterface();
+	MainMenu();	
 	return 0;
 }

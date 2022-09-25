@@ -22,8 +22,8 @@ void airCraftList::writeAirCraftFile() {
 	for (int i = 0; i < TotalAC; i++) {
 		if (TotalAC != 0 && i > 0)
 			ofs << std::endl;
-		ofs << ACList[i]->ACType << std::endl
-			<< ACList[i]->ACNumber << std::endl
+		ofs << ACList[i]->ACType << "\n"
+			<< ACList[i]->ACNumber << "\n"
 			<< ACList[i]->TotalSeats;
 	}
 	ofs.close();
