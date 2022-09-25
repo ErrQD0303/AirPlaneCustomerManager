@@ -10,7 +10,10 @@ void readAirCraftFile(airCraftList* AC) {
 	std::ifstream ifs;
 	ifs.open("AirCraft.txt");
 	while (!ifs.eof()) {
-		ifs >> planeType >> planeNumber >> totalSeats;
+		ifs.getline(planeType, 100, '\n');
+		ifs.getline(planeNumber, 100,  '\n');
+		ifs >> totalSeats;
+		ifs.ignore();
 		AC->insertAirCraft(planeType, planeNumber, totalSeats);
 	}
 	ifs.close();
@@ -21,7 +24,7 @@ void airCraftList::writeAirCraftFile() {
 	ofs.open("AirCraft.txt");
 	for (int i = 0; i < TotalAC; i++) {
 		if (TotalAC != 0 && i > 0)
-			ofs << std::endl;
+			ofs << "\n";
 		ofs << ACList[i]->ACType << "\n"
 			<< ACList[i]->ACNumber << "\n"
 			<< ACList[i]->TotalSeats;
