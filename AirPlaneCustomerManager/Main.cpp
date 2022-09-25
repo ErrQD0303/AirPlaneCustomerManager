@@ -3,7 +3,6 @@
 #include "MainMenu.h"
 
 int main() {
-	PMSaveBox();
 	MainMenu();	
 	return 0;
 }

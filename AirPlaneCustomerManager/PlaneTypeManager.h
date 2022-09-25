@@ -17,7 +17,7 @@ void PMSearchInterface(airCraftList*);
 void block_char(char* b, int a, int x, int y);
 void block_char_search_PM(char* b, int a, int x, int y, airCraftList* AC);
 void block_char_edit_PM(char* b, int a, int x, int y, airCraftList* AC, vector<int>& pos);
-
+void block_char_delete_PM(char* b, int a, int x, int y, airCraftList* AC, vector<int>& pos);
 
 void PMMainInterface(airCraftList* AC) {
 	int page = 0;
@@ -34,8 +34,9 @@ void PMMainInterface(airCraftList* AC) {
 			PMAddInterface(AC);
 		if (inputChar == 61)
 			PMEditInterface(AC);
-		if (inputChar == 127)
+		if (inputChar == 83) {
 			PMDeleteInterface(AC);
+		}
 		if (inputChar == 80 && AC->getTotalAC() / 19 * (page + 1) > 0 && page < AC->getTotalAC() / 19) {
 			page++;
 		}
@@ -287,10 +288,79 @@ void PMEditInterface1(airCraftList* AC, int& key, int pos) {
 }
 
 void PMDeleteInterface(airCraftList* AC) {
+	vector<int> pos;
+begin:
+	showCur(1);
+	int page = 0;
+	AC->PMPrintPlaneTypeInforSearchInterface(page, pos);
+	char* planeType = new char[100];
+	do {
+		block_char_delete_PM(planeType, 100, 41, 3, AC, pos);
+	} while (strlen(planeType) == 0);
+	if (planeType[0] == '?')
+		goto begin;
+	if (planeType[0] == '.')
+		return;
+	delete[] planeType;
+}
+
+void PMDeleteInterface1(airCraftList* AC, int& key, int pos) {
 	system("cls");
 	menuCurTime();
+	PMDeleteBox(); 
+	char inputChar;
+	int inpt = 0;
+	do {
+		inputChar = _getch();
+		if (inputChar == 72)
+			if (inpt == 1) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt--;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			else {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt = 1;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+		if (inputChar == 80)
+			if (inpt == 0) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt++;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			else {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt = 0;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+		if (inputChar == 27) {
+			system("cls");
+			return;
+		}
+		if (inputChar == 13)
+			break;
+	} while (1);
+	switch (inpt) {
+	case 0: {
+		AC->deleteAirCraft(pos);
+		system("cls");
+		gotoxy(55, 13);
+		std::cout << "Deleting";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		break;
+	}
+	case 1: {
+		break;
+	}
+	}
 }
-//
 
 void PMSearchInterface(airCraftList* AC) {
 	int page = 0;
@@ -351,31 +421,21 @@ void airCraftList::editAirCraft(char* acNumber, char* acType, int totalSeats, co
 			ACList[pos]->ACType[i] = acType[i];
 	if (i == strlen(acType))
 		ACList[pos]->ACType[i] = '\0';
-	/*if (acNumber[0] != '.' && acNumber[0] != '\0' && str.compare(acNumber) != 0)
-		for (i = 0; i < strlen(acNumber); i++)
-			if (acNumber[i] == 27){
-				i = 0;
-				str[i] = '\0';
-				break;
-			}*/
-	/*if (str[0] != '\0')
-		for (i = 0; i < strlen(acNumber); i++)
-			ACList[pos]->ACNumber[i] = acNumber[i];
-	ACList[pos]->ACNumber[++i] = '\0';
-	str = ACList[pos]->ACType;
-	if (acType[0] != '.' && acType[0] != '\0' && str.compare(acType) != 0)
-		for (i = 0; i < strlen(acType); i++)
-			if (acType[i] == 27){
-				i = 0;
-				str[i] = '\0';
-				break;
-			}
-	if (str[0] != '\0')
-		for (i = 0; i < strlen(acType); i++)
-			ACList[pos]->ACType[i] = acType[i];
-	ACList[pos]->ACType[++i] = '\0';*/
 	if (totalSeats > 0)
 		ACList[pos]->TotalSeats = totalSeats;
+}
+
+void airCraftList::deleteAirCraft(const int& pos) {
+	int i = 0, j = 0;
+	for (i = pos; i < TotalAC - 1; i++) {
+		for (j = 0; j < strlen(ACList[i + 1]->ACNumber); j++)
+			ACList[i]->ACNumber[j] = ACList[i + 1]->ACNumber[j];
+		for (j = 0; j < strlen(ACList[i + 1]->ACType); j++)
+			ACList[i]->ACType[j] = ACList[i + 1]->ACType[j];
+		ACList[i]->TotalSeats = ACList[i + 1]->TotalSeats;
+	}
+	delete[] ACList[TotalAC- 1]->ACNumber, ACList[TotalAC - 1]->ACType;
+	TotalAC--;
 }
 
 void block_char(char* b, int a, int x, int y)
@@ -615,6 +675,118 @@ search:
 				if (inputChar == 13) {
 					int key1 = 0;
 					PMEditInterface1(AC, key1, pos[count2]);
+					b[0] = '?';
+					b[1] = '\0';
+					return;
+				}
+				gotoxy(2, 7 + key);
+				cout << "==>";
+			} while (inputChar != 27);
+			b[0] = '.';
+			b[1] = '\0';
+			return;
+		}
+	}
+}
+
+void block_char_delete_PM(char* b, int a, int x, int y, airCraftList* AC, vector<int>& pos) {
+	//showCur(0);
+editI:
+	b[0] = '\0';
+	int i = 0;
+	char inputChar;
+	int count1 = 0;
+search:
+	gotoxy(x, y);
+	while (1)
+	{
+		inputChar = _getch();
+		if (i < 6 && inputChar >= 48 && inputChar <= 122
+			|| inputChar == 32) {
+			gotoxy(x + i, y);
+			b[i] = inputChar;
+			std::cout << inputChar;
+			i++;
+			b[i] = '\0';
+			AC->PMPrintPlaneTypeInforSearchInterface(b, count1, pos);
+			gotoxy(x + i, y);
+		}
+		if (inputChar == 8 && i > 0) {
+			gotoxy(x + i - 1, y);
+			std::cout << " ";
+			gotoxy(x + i - 1, y);
+			i--;
+			b[i] = '\0';
+			AC->PMPrintPlaneTypeInforSearchInterface(b, count1, pos);
+			gotoxy(x + i, y);
+		}
+		if (inputChar == 8 && i == 0) {
+			AC->PMPrintPlaneTypeInforSearchInterface(0, pos);
+			showCur(1);
+			gotoxy(41, 3);
+			//system("pause");
+		}
+		if (inputChar == 27) {
+			b[0] = '.';
+			b[1] = '\0';
+			return;
+		}
+		if (inputChar == 13) {
+			if (b[0] == '\0')
+				count1 = -1;
+			if (count1 == 0)
+				continue;
+			if (count1 == -1)
+				count1 = AC->getTotalAC();
+			showCur(0);
+			b[0] = '.';
+			b[1] = '\0';
+			int page = 0;
+			int count = count1 / 19;
+			int count2 = 0;
+		choose:
+			gotoxy(2, 7);
+			std::cout << "==>";
+			int key = 0;
+			char inputChar;
+			do {
+				inputChar = _getch();
+				if (inputChar == 72) {
+					if (key > 0) {
+						gotoxy(2, 7 + key); std::cout << "   ";
+						key--;
+						count2--;
+					}
+					else if (key == 0) {
+						if (page > 0 && page <= count) {
+							gotoxy(2, 7); std::cout << "   ";
+							page--;
+							AC->PMPrintPlaneTypeInforSearchInterface(b, count1, pos, page);
+							key = 18;
+							count2--;
+						}
+					}
+				}
+				else if (inputChar == 80) {  // fix position 24/9
+					if (key < 18 && key < count1 - 1 && count2 < count1 - 1) {
+						//if (key)
+						gotoxy(2, 7 + key); std::cout << "   ";
+						key++;
+						count2++;
+					}
+					else if (key == 18) {
+						if (page < count) {
+							gotoxy(2, 25); std::cout << "   ";
+							page++;
+							count2++;
+							AC->PMPrintPlaneTypeInforSearchInterface(b, count1, pos, page);
+							goto choose;
+						}
+					}
+				}
+				if (inputChar == 13) {
+					int key1 = 0;
+					PMDeleteInterface1(AC, key1, pos[count2]);
 					b[0] = '?';
 					b[1] = '\0';
 					return;

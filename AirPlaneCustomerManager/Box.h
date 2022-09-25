@@ -68,6 +68,13 @@ void PMSaveBox() {
 	gotoxy(56, 12); std::cout << "==>";
 }
 
+void PMDeleteBox() {
+	boxnho(40, 80, 10, 15);
+	gotoxy(49, 11); std::cout << "DO YOU WANT TO DELETE?";
+	gotoxy(60, 12); std::cout << "YES";
+	gotoxy(60, 13); std::cout << "NO";
+	gotoxy(56, 12); std::cout << "==>";
+}
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
 	std::cout << char(218) << std::setw(x2 - x1) << std::setfill(char(196))

@@ -17,6 +17,7 @@ public:
 	~airCraftList();
 	int insertAirCraft(char* acNumber, char* acType, int totalSeats);
 	void editAirCraft(char* acNumber, char* acType, int totalSeats, const int& pos);
+	void deleteAirCraft(const int& pos);
 	char* getACNumber(const char* acNumber) const;
 	char* getACType(const char* acNumber) const;
 	int getTotalSeats(const char* acNumber) const; 
