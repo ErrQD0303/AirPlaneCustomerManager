@@ -36,7 +36,7 @@ public:
 };
 
 class flight {
-	friend class flightList;
+	//friend class flightList;
 public:
 	class ticket {
 public:
@@ -52,7 +52,7 @@ public:
 		delete ticketList;
 	}
 	typedef class ticket TICKET;
-private:
+protected:
 	char ACNumber[20];
 	char AirPort[100];
 	int NumberOfFlight;
@@ -67,12 +67,14 @@ private:
 };
 typedef class flight FLIGHT;
 
-class flightList {
+class flightList : public flight {
 private:
 	flight _flight;
 	flightList* next;
 	int count = 0;
 public:
-	
+	void get() {
+		next->ticketList->IDNumber;
+	}
 };
 typedef class flightList FLIGHTLIST;
