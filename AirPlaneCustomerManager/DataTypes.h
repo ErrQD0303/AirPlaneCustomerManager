@@ -1,12 +1,13 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <mutex>
 #define MAX 300
 class airCraftList {
 private:
 	class airCraft {
 	public:
-		char ACNumber[100];
+		char ACNumber[20];
 		char ACType[100];
 		int TotalSeats;
 	};
@@ -33,3 +34,45 @@ public:
 	void PMPrintPlaneTypeInforSearchInterface(char* c, int count, vector<int>& pos, int page) const;
 	int getTotalAC() const;
 };
+
+class flight {
+	friend class flightList;
+public:
+	class ticket {
+public:
+	int n = 1;
+	string* IDNumber;
+	int ticketLeft = n;
+	int ticketSold = 0;
+};
+	flight() {
+		ticketList = new ticket();
+	}
+	~flight() {
+		delete ticketList;
+	}
+	typedef class ticket TICKET;
+private:
+	char ACNumber[20];
+	char AirPort[100];
+	int NumberOfFlight;
+	char FlightCode[20];
+	int hour = 0;
+	int minute = 0;
+	int day = 1;
+	int month = 1;
+	int year = 2022;
+	int FlightCondition;
+	ticket* ticketList;
+};
+typedef class flight FLIGHT;
+
+class flightList {
+private:
+	flight _flight;
+	flightList* next;
+	int count = 0;
+public:
+	
+};
+typedef class flightList FLIGHTLIST;
