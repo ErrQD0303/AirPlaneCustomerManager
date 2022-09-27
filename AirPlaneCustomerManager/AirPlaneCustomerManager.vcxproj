@@ -130,6 +130,7 @@
     <ClInclude Include="AVLTree.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="FlightManager.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="MyLib.h" />
     <ClInclude Include="PlaneTypeManager.h" />

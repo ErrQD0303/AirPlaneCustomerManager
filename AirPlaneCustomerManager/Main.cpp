@@ -14,6 +14,6 @@ int main() {
 	//	std::cout << token << "\n";
 	//	token = std::strtok(NULL, " !");
 	//}
-	MainMenu();	
+	MainMenu();
 	return 0;
 }

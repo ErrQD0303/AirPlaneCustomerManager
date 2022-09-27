@@ -35,8 +35,8 @@ public:
 	int getTotalAC() const;
 };
 
-class flight {
-	//friend class flightList;
+class Flight {
+	//friend class FlightList;
 public:
 	class ticket {
 public:
@@ -45,14 +45,13 @@ public:
 	int ticketLeft = n;
 	int ticketSold = 0;
 };
-	flight() {
+	typedef class ticket TICKET;
+	Flight() {
 		ticketList = new ticket();
 	}
-	~flight() {
+	~Flight() {
 		delete ticketList;
 	}
-	typedef class ticket TICKET;
-protected:
 	char ACNumber[20];
 	char AirPort[100];
 	int NumberOfFlight;
@@ -64,17 +63,33 @@ protected:
 	int year = 2022;
 	int FlightCondition;
 	ticket* ticketList;
+	Flight* next;
+	Flight* prev;
 };
-typedef class flight FLIGHT;
+typedef class Flight FLIGHT;
 
-class flightList : public flight {
-private:
-	flight _flight;
-	flightList* next;
-	int count = 0;
+// using mutex to synchronize multithreads to create just 1 objects of
+// this class (using linked list)
+
+class FlightList : public Flight {
 public:
+	Flight* head;
+	int fCount = 0;
+	static FlightList* flightList;
+	static mutex mLocker;
+	static FlightList* getInstance() {
+		mLocker.lock();
+		if (flightList == nullptr)
+			flightList = new FlightList();
+		mLocker.unlock();
+		return flightList;
+	}
 	void get() {
-		next->ticketList->IDNumber;
+		FlightList* a = FlightList::getInstance();
+		a->month = 0;
 	}
 };
-typedef class flightList FLIGHTLIST;
+typedef class FlightList FLIGHTLIST;
+
+FlightList* FlightList::flightList = nullptr;
+mutex FlightList::mLocker;

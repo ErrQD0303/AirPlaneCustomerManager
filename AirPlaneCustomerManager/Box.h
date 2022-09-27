@@ -8,7 +8,9 @@
 
 void boxnho(int, int, int, int);
 void PMboxtong();
+void FMboxtong();
 
+// Plane Manager Box
 void PMMainBox() {
 	PMboxtong();
 	boxnho(5, 18, 27, 29);
@@ -75,6 +77,22 @@ void PMDeleteBox() {
 	gotoxy(60, 13); std::cout << "NO";
 	gotoxy(56, 12); std::cout << "==>";
 }
+
+// Flight manager box
+void FMMainBox() {
+	FMboxtong();
+	boxnho(5, 18, 27, 29);
+	gotoxy(7, 28); std::cout << "<ESC>: EXIT";
+	boxnho(20, 31, 27, 29);
+	gotoxy(22, 28); std::cout << "<F1>: ADD";
+	boxnho(33, 45, 27, 29);
+	gotoxy(35, 28); std::cout << "<F3>: EDIT";
+	boxnho(47, 65, 27, 29);
+	gotoxy(49, 28); std::cout << "<DELETE>: DELETE";
+	boxnho(95, 117, 27, 29);
+	gotoxy(97, 28); std::cout << "PAGE: ";
+}
+
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
 	std::cout << char(218) << std::setw(x2 - x1) << std::setfill(char(196))
@@ -140,4 +158,66 @@ void PMboxtong() {
 	gotoxy(30, 5); std::cout << "Aircraft Type";
 	gotoxy(72, 5); std::cout << "Aircraft Number";
 	gotoxy(102, 5); std::cout << "Total Seats";
+}
+
+void FMboxtong() {
+	boxnho(5, 117, 1, 26);
+	boxnho(5, 117, 5, 7);
+	boxnho(5, 10, 5, 26);
+	boxnho(30, 40, 5, 26);
+	boxnho(50, 73, 5, 26);
+	boxnho(78, 83, 5, 26);
+	boxnho(89, 93, 5, 26);
+	boxnho(98, 105, 5, 26);
+	boxnoi0(11, 5);
+	boxnoi0(30, 5);
+	boxnoi0(41, 5);
+	boxnoi0(50, 5);
+	boxnoi0(74, 5);
+	boxnoi0(78, 5);
+	boxnoi0(84, 5);
+	boxnoi0(89, 5);
+	boxnoi0(94, 5);
+	boxnoi0(98, 5);
+	boxnoi0(106, 5);
+	boxnoi1(11, 26);
+	boxnoi1(30, 26);
+	boxnoi1(41, 26);
+	boxnoi1(50, 26);
+	boxnoi1(74, 26);
+	boxnoi1(78, 26);
+	boxnoi1(84, 26);
+	boxnoi1(89, 26);
+	boxnoi1(94, 26);
+	boxnoi1(98, 26);
+	boxnoi1(106, 26);
+	boxnoi2(5, 5);
+	boxnoi2(5, 7);
+	boxnoi3(118, 5);
+	boxnoi3(118, 7);
+	boxnoi4(11, 7);
+	boxnoi4(30, 7);
+	boxnoi4(41, 7);
+	boxnoi4(50, 7);
+	boxnoi4(74, 7);
+	boxnoi4(78, 7);
+	boxnoi4(84, 7);
+	boxnoi4(89, 7);
+	boxnoi4(94, 7);
+	boxnoi4(98, 7);
+	boxnoi4(106, 7);
+	gotoxy(55, 3);
+	std::cout << "FLIGHT MANAGEMENT";
+	gotoxy(6, 6); std::cout << "INDEX";
+	gotoxy(16, 6); std::cout << "PLANE TYPE";
+	gotoxy(31, 6); std::cout << "FLIGHTCODE";
+	gotoxy(42, 6); std::cout << "PLANENUM";
+	gotoxy(57, 6); std::cout << "AIRPORT COME";
+	gotoxy(75, 6); std::cout << "DAY";
+	gotoxy(79, 6); std::cout << "MONTH";
+	gotoxy(85, 6); std::cout << "YEAR";
+	gotoxy(90, 6); std::cout << "HOUR";
+	gotoxy(95, 6); std::cout << "MIN";
+	gotoxy(99, 6); std::cout << "TICKETS";
+	gotoxy(107, 6); std::cout << "FLIGHT COND";
 }
