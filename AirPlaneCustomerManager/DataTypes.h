@@ -72,11 +72,12 @@ typedef class Flight FLIGHT;
 // this class (using linked list)
 
 class FlightList : public Flight {
-public:
+private:
 	Flight* head;
 	int fCount = 0;
 	static FlightList* flightList;
 	static mutex mLocker;
+public:
 	static FlightList* getInstance() {
 		mLocker.lock();
 		if (flightList == nullptr)
