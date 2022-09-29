@@ -51,10 +51,12 @@ class Flight {
 private:
 	class Ticket {
 	public:
-		int n = 1;
+		int n;
 		string* IDNumber;
-		int ticketLeft = n;
-		int ticketSold = 0;
+		int ticketLeft;
+		int ticketSold;
+		Ticket(int = 1, int = 1, int = 0);
+		Ticket(string*, int = 1, int = 1, int = 0);
 	};
 	typedef class Ticket TICKET;
 
@@ -65,7 +67,7 @@ private:
 		Time(int = 0, int = 0, int = 1, int = 1, int = 2022);
 	};
 	typedef class Time TIME;
-	
+
 	string ACNumber;
 	int NumberOfFlight;
 	string FlightCode;
@@ -76,12 +78,20 @@ private:
 	Flight* left;
 	Flight* right;
 	Balance_factor BF;
-	
+	int height;
+
 	Flight(string = "", string = "", string = "", string = "00:00-01/01/2022",
-		 FlightStatus = ONTIME, int = 0);
+		FlightStatus = ONTIME, int = 0);
 
 	~Flight() {
 		delete ticketList, time;
+	}
+
+	bool operator==(const Flight& rhs) const;
+	bool operator<(const Flight& rhs) const;
+	bool operator>(const Flight& rhs) const;
+	bool operator>=(const Flight& rhs) const {
+		return !(*this < rhs);
 	}
 };
 typedef class Flight FLIGHT;
@@ -93,6 +103,7 @@ class FlightList {
 private:
 	Flight* root;
 	int fCount;
+	int treeHeight;
 	static FlightList* flightlist;
 	static mutex mLocker;
 	FlightList();
@@ -106,10 +117,19 @@ public:
 		mLocker.unlock();
 		return flightlist;
 	}
-	void insertFlight();
+	bool insertFlight(const string&, const string&, const string&, 
+		const string&, const FlightStatus&, Flight::Ticket*);
+	bool recursiveInsert(Flight*, const string&, const string&, const string&,
+		const string&, const FlightStatus&, Flight::Ticket*, bool&);
+	void rotateLeft(Flight*);
+	void rotateRight(Flight*);
+	void rightBalance(Flight*);
+	void leftBalance(Flight*);
 	void clear();
 	Flight::Time* timeParse(const string&);
-	int readFlightFile();
+	void readFlightFile();
+	void writeFlightFile(Flight*);
+	bool operator!() const;
 };
 typedef class FlightList FLIGHTLIST;
 

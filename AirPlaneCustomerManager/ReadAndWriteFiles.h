@@ -32,11 +32,11 @@ void airCraftList::writeAirCraftFile() {
 	ofs.close();
 }
 
-int FlightList::readFlightFile() { // ok
+void FlightList::readFlightFile() { // ok
 	char* input = new char[100];
 	string acnumber, flightcode, airport, time;
-	int flightstatus, totalticket, ticketsold, ticketleft;
 	std::ifstream ifs;
+	int flightstatus;
 	ifs.open("Flight.txt");
 	while (!ifs.eof()) {
 		ifs.getline(input, 100, '\n');
@@ -47,14 +47,53 @@ int FlightList::readFlightFile() { // ok
 		airport.assign(input);
 		ifs.getline(input, 100, '\n');
 		time.assign(input);
-		ifs >> flightstatus >> totalticket >> ticketsold >> ticketleft;
-		std::string* IDNumber = new string[totalticket];
+		Flight::Ticket* ticket = new Flight::Ticket();
+		ifs >> flightstatus >> ticket->n >> ticket->ticketSold
+			>> ticket->ticketLeft;
+		ticket->IDNumber = new string[ticket->n];
+		std::fill_n(ticket->IDNumber, ticket->n, "");
 		int temp;
-		for (int i = 0; i < ticketsold; i++) {
+		for (int i = 0; i < ticket->ticketSold; i++) {
 			ifs >> temp;
-			ifs >> IDNumber[temp - 1];
+			ifs >> ticket->IDNumber[temp - 1];
 		}
 		ifs.ignore();
 	}
 	ifs.close();
+}
+
+void FlightList::writeFlightFile(Flight* subroot) {
+	std::ofstream ofs;
+	ofs.open("Flight.txt");
+	if (subroot == nullptr)
+		return;
+	if (subroot != root)
+		ofs << '\n';
+	ofs << subroot->FlightCode << '\n'
+		<< subroot->ACNumber << '\n'
+		<< subroot->AirPort << '\n'
+		<< subroot->time->_hour << ':'
+		<< subroot->time->_minute << '-';
+	if (subroot->time->_day < 10)
+		ofs << '0' << subroot->time->_day << '/';
+	else
+		ofs << subroot->time->_day << '/';
+	if (subroot->time->_month < 10)
+		ofs << '0' << subroot->time->_month << '/';
+	else
+		ofs << subroot->time->_month << '/';
+	ofs << subroot->time->_year << '\n'
+		<< subroot->Flight_Status << '\n'
+		<< subroot->ticketList->n << '\n'
+		<< subroot->ticketList->ticketSold << '\n'
+		<< subroot->ticketList->ticketLeft;
+	for (int i = 0; i < subroot->ticketList->n; i++) {
+		if (subroot->ticketList->IDNumber[i].compare("") != 0) {
+			ofs << '\n' << i + 1 << '\n' 
+				<< subroot->ticketList->IDNumber[i];
+		}
+	}
+	writeFlightFile(subroot->left);
+	writeFlightFile(subroot->right);
+	ofs.close();
 }
