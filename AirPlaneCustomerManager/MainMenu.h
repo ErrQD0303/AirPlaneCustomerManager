@@ -6,6 +6,7 @@
 #include "Time.h"
 #include <conio.h>
 #include "PlaneTypeManager.h"
+#include "FlightManager.h"
 
 using namespace std;
 
@@ -13,6 +14,7 @@ void MainMenu() {
 	SetConsoleTitle(L"Aircraft Manager 2.0");
 	airCraftList* AC = new airCraftList();
 	readAirCraftFile(AC);
+	FlightList* FL = FlightList::getInstance();
 main_menu:
 	showCur(0);
 	flushConsoleInputBuffer();

@@ -31,3 +31,30 @@ void airCraftList::writeAirCraftFile() {
 	}
 	ofs.close();
 }
+
+int FlightList::readFlightFile() { // ok
+	char* input = new char[100];
+	string acnumber, flightcode, airport, time;
+	int flightstatus, totalticket, ticketsold, ticketleft;
+	std::ifstream ifs;
+	ifs.open("Flight.txt");
+	while (!ifs.eof()) {
+		ifs.getline(input, 100, '\n');
+		flightcode.assign(input);
+		ifs.getline(input, 100, '\n');
+		acnumber.assign(input);
+		ifs.getline(input, 100, '\n');
+		airport.assign(input);
+		ifs.getline(input, 100, '\n');
+		time.assign(input);
+		ifs >> flightstatus >> totalticket >> ticketsold >> ticketleft;
+		std::string* IDNumber = new string[totalticket];
+		int temp;
+		for (int i = 0; i < ticketsold; i++) {
+			ifs >> temp;
+			ifs >> IDNumber[temp - 1];
+		}
+		ifs.ignore();
+	}
+	ifs.close();
+}

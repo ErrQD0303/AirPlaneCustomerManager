@@ -4,6 +4,8 @@
 #include "MainMenu.h"
 #include <cstring>
 #include <string>
+#include "DataTypes.h"
+#include "FlightManager.h"
 
 int main() {
 	//char c[100];
@@ -13,7 +15,9 @@ int main() {
 	//while (token != nullptr) {
 	//	std::cout << token << "\n";
 	//	token = std::strtok(NULL, " !");
-	//}
+	//
+	/*FlightList* k = FLIGHTLIST::getInstance();
+	std::cout << k->readFlightFile();*/
 	MainMenu();
 	return 0;
 }

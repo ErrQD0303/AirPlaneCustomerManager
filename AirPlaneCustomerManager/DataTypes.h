@@ -1,7 +1,12 @@
 #pragma once
+#ifndef DATATYPE_H
+#define DATATYPE_H
+
 #include <iostream>
 #include <vector>
 #include <mutex>
+#include <string>
+
 #define MAX 300
 class airCraftList {
 private:
@@ -35,62 +40,79 @@ public:
 	int getTotalAC() const;
 };
 
-class Flight {
-	//friend class FlightList;
-public:
-	class ticket {
-public:
-	int n = 1;
-	string* IDNumber;
-	int ticketLeft = n;
-	int ticketSold = 0;
+enum FlightStatus {
+	ONTIME = 0, DELAY, FLYING, COMPLETE
 };
-	typedef class ticket TICKET;
-	Flight() {
-		ticketList = new ticket();
-	}
-	~Flight() {
-		delete ticketList;
-	}
-	char ACNumber[20];
-	char AirPort[100];
+
+enum Balance_factor {left_higher = -1, equal_height, right_higher};
+
+class Flight {
+	friend class FlightList;
+private:
+	class Ticket {
+	public:
+		int n = 1;
+		string* IDNumber;
+		int ticketLeft = n;
+		int ticketSold = 0;
+	};
+	typedef class Ticket TICKET;
+
+	class Time {
+		friend class FlightList;
+	public:
+		int _hour, _minute, _day, _month, _year;
+		Time(int = 0, int = 0, int = 1, int = 1, int = 2022);
+	};
+	typedef class Time TIME;
+	
+	string ACNumber;
 	int NumberOfFlight;
-	char FlightCode[20];
-	int hour = 0;
-	int minute = 0;
-	int day = 1;
-	int month = 1;
-	int year = 2022;
-	int FlightCondition;
-	ticket* ticketList;
-	Flight* next;
-	Flight* prev;
+	string FlightCode;
+	string AirPort;
+	Time* time;
+	FlightStatus Flight_Status;
+	Ticket* ticketList;
+	Flight* left;
+	Flight* right;
+	Balance_factor BF;
+	
+	Flight(string = "", string = "", string = "", string = "00:00-01/01/2022",
+		 FlightStatus = ONTIME, int = 0);
+
+	~Flight() {
+		delete ticketList, time;
+	}
 };
 typedef class Flight FLIGHT;
 
 // using mutex to synchronize multithreads to create just 1 objects of
 // this class (using linked list)
 
-class FlightList : public Flight {
+class FlightList {
 private:
-	Flight* head;
-	int fCount = 0;
-	static FlightList* flightList;
+	Flight* root;
+	int fCount;
+	static FlightList* flightlist;
 	static mutex mLocker;
+	FlightList();
+	~FlightList();
 public:
-	static FlightList* getInstance() {
+	static FlightList *getInstance() {
 		mLocker.lock();
-		if (flightList == nullptr)
-			flightList = new FlightList();
+		if (flightlist == nullptr) {
+			flightlist = new FlightList();
+		}
 		mLocker.unlock();
-		return flightList;
+		return flightlist;
 	}
-	void get() {
-		FlightList* a = FlightList::getInstance();
-		a->month = 0;
-	}
+	void insertFlight();
+	void clear();
+	Flight::Time* timeParse(const string&);
+	int readFlightFile();
 };
 typedef class FlightList FLIGHTLIST;
 
-FlightList* FlightList::flightList = nullptr;
+FlightList* FlightList::flightlist = nullptr;
 mutex FlightList::mLocker;
+#endif
