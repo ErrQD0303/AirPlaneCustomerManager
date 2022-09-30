@@ -121,8 +121,8 @@ public:
 	Flight* recursiveInsert(Flight*, Flight*, bool&);
 	Flight* rotateLeft(Flight*);
 	Flight* rotateRight(Flight*);
-	bool deleteFlight(const string&);
-	Flight* recursiveDelete(Flight*, const string&, bool&);
+	void deleteFlight(const string&);
+	Flight* recursiveDelete(Flight*, const string&);
 	int height(Flight*);
 	Flight* minValueFlight(Flight*);
 	int getBalanceFactor(Flight*);

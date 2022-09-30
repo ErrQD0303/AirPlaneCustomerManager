@@ -110,24 +110,18 @@ Flight* FlightList::rotateRight(Flight* subroot) {
 	return leftTree;
 }
 
-bool FlightList::deleteFlight(const string& flightcode) {
-	bool check = true;
-	root = recursiveDelete(root, flightcode, check);
-	if (check == true)
-		fCount--;
-	return check;
+void FlightList::deleteFlight(const string& flightcode) {
+	root = recursiveDelete(root, flightcode);
 }
 
-Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode, 
-	bool& check) {
+Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
 	if (subroot == nullptr) {
-		check = false;
 		return subroot;
 	}
 	else if (flightcode.compare(subroot->FlightCode) < 0)
-		subroot->left = recursiveDelete(subroot->left, flightcode, check);
+		subroot->left = recursiveDelete(subroot->left, flightcode);
 	else if (flightcode.compare(subroot->FlightCode) > 0)
-		subroot->right = recursiveDelete(subroot->right, flightcode, check);
+		subroot->right = recursiveDelete(subroot->right, flightcode);
 	else {
 		Flight* temp = nullptr;
 		if (subroot->left == nullptr) {
@@ -143,7 +137,7 @@ Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode,
 		else {
 			temp = minValueFlight(subroot->right);
 			copyFlightData(subroot, temp);
-			subroot->right = recursiveDelete(subroot->right, flightcode, check);
+			subroot->right = recursiveDelete(subroot->right, flightcode);
 		}
 	}
 	int bf = getBalanceFactor(subroot);
