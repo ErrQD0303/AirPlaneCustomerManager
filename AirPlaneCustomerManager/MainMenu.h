@@ -21,15 +21,15 @@ main_menu:
 	system("cls");
 	menuCurTime();
 	char menu_option[9][100] = {
-	"1) Quan ly May bay ",
-	"2) Quan ly chuyen bay ",
-	"3) Quan ly Hanh khach ",
-	"4) Dat Ve va Huy ve ",
-	"5) Thong ke danh sach chuyen bay ",
-	"6) Danh sach cac ve con trong theo ma ",
-	"7) in chuyen bay theo ngay ",
-	"8) Thong ke va sap xep cac luot thuc hien cua chuyen bay ",
-	"9) Thoat khoi phan mem "
+	"1) Plane Type Management ",
+	"2) Plane Flight Management",
+	"3) Customer Management ",
+	"4) Book & Cancle ",
+	"5) Flight List Statistics ",
+	"6) Ticket Left in Flight ",
+	"7) Print Flight ",
+	"8) Plane Flight Statistics ",
+	"9) Exit "
 	};
 	gotoxy(20, 1); cout << "    \_____  .__      __________.__                           ";
 	gotoxy(20, 2); cout << "   \/  _  \\ |__|_____\\______   \\  | _____    ____   ____     ";
@@ -68,7 +68,7 @@ main_menu:
 		///        \     \  \_ /  \
 		//\_______  \ / \ \_____  /
 		//        \ / \ /       \/
-	gotoxy(15, 17); cout << "Chon cac muc duoi: " << endl;
+	gotoxy(30, 17); cout << "Option: " << endl;
 	gotoxy(30, 18); cout << "     ==>" << menu_option[0] << endl;
 	gotoxy(30, 19); cout << "        " << menu_option[1] << endl;
 	gotoxy(30, 20); cout << "        " << menu_option[2] << endl;

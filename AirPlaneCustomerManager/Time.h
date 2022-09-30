@@ -30,8 +30,18 @@ void menuCurTime() {
 		cout << ":0" << min;
 	else
 		cout << ":" << min;
-	gotoxy(91, 0); cout << day;
-	gotoxy(93, 0); cout << "/" << month;
-	gotoxy(95, 0); cout << "/" << year;
+	gotoxy(91, 0);
+	if (day < 10) {
+		std::cout << '0' << day;
+	}
+	else
+		std::cout << day;
+	gotoxy(93, 0);
+	if (month < 10) {
+		std::cout << "/0" << month;
+	}
+	else
+		std::cout << "/" << month;
+	gotoxy(96, 0); cout << "/" << year;
 	cout << " GMT+7";
 }

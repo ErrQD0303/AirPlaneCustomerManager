@@ -106,7 +106,12 @@ private:
 	static FlightList* flightlist;
 	static mutex mLocker;
 	FlightList();
-	~FlightList();
+	~FlightList(); 
+	Flight* recursiveInsert(Flight*, Flight*, bool&);
+	Flight* rotateLeft(Flight*);
+	Flight* rotateRight(Flight*);
+	Flight* recursiveDelete(Flight*, const string&);
+	void postOrderDeleteTree(Flight*);
 public:
 	static FlightList *getInstance() {
 		mLocker.lock();
@@ -118,16 +123,13 @@ public:
 	}
 	bool insertFlight(const string&, const string&, const string&, 
 		const string&, const FlightStatus&, Flight::Ticket*);
-	Flight* recursiveInsert(Flight*, Flight*, bool&);
-	Flight* rotateLeft(Flight*);
-	Flight* rotateRight(Flight*);
 	void deleteFlight(const string&);
-	Flight* recursiveDelete(Flight*, const string&);
 	int height(Flight*);
 	Flight* minValueFlight(Flight*);
 	int getBalanceFactor(Flight*);
 	void copyFlightData(Flight*, Flight*);
 	void clear();
+	const Flight* searchFlight(const string&) const;
 	Flight::Time* timeParse(const string&);
 	void readFlightFile();
 	void writeFlightFile(Flight*);

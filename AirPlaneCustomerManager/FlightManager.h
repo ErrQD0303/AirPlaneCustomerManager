@@ -43,7 +43,7 @@ FlightList::FlightList() {
 }
 
 FlightList::~FlightList() {
-	
+	clear();
 }
 
 bool FlightList::insertFlight(const string& flightcode, const string& acnumber, 
@@ -112,6 +112,7 @@ Flight* FlightList::rotateRight(Flight* subroot) {
 
 void FlightList::deleteFlight(const string& flightcode) {
 	root = recursiveDelete(root, flightcode);
+	fCount--;
 }
 
 Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
@@ -153,6 +154,18 @@ Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
 		subroot->right = rotateRight(subroot->right);
 		return rotateLeft(subroot);
 	}
+}
+
+const Flight* FlightList::searchFlight(const string& flightcode) const {
+	Flight* pSearch = root;
+	while (pSearch != nullptr &&
+		pSearch->FlightCode.compare(flightcode) != 0) {
+		if (pSearch->FlightCode.compare(flightcode) > 0)
+			pSearch = pSearch->left;
+		else
+			pSearch = pSearch->right;
+	}
+	return pSearch;
 }
 
 int FlightList::height(Flight* flight) {
@@ -198,8 +211,22 @@ void FlightList::copyFlightData(Flight* lhs, Flight* rhs) {
 		lhs->ticketList->IDNumber);
 }
 
+void FlightList::postOrderDeleteTree(Flight* subroot) {
+	if (subroot != nullptr) {
+		postOrderDeleteTree(subroot->left);
+		postOrderDeleteTree(subroot->right);
+		delete subroot;
+		subroot = nullptr;
+	}
+}
+
+void FlightList::clear() {
+	postOrderDeleteTree(root);
+	fCount = 0;
+}
+
 bool FlightList::operator!() const {
-	return fCount == 0;
+	return (root == nullptr);
 }
 //00:00-01/01/2022
 Flight::Time* FlightList::timeParse(const string& exactdaytime) {
