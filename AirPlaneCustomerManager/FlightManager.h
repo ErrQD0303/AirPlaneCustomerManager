@@ -69,46 +69,42 @@ bool FlightList::recursiveInsert(Flight* subroot, const string& flightcode,
 		taller = true;
 		subroot->height = 1;
 	}
-	else if (!subroot->FlightCode.compare(flightcode)) {
+	else if (subroot->FlightCode.compare(flightcode) == 0) {
 		result = 0;
 		taller = false;
 	}
-	else if (timeParse(time)->_year < subroot->time->_year)
-		if (timeParse(time)->_month < subroot->time->_month)
-			if (timeParse(time)->_day < subroot->time->_day)
-				if (timeParse(time)->_hour < subroot->time->_hour)
-					if (timeParse(time)->_minute < subroot->time->_minute) {
-						result = recursiveInsert(subroot->left, flightcode, acnumber, airport, time,
-							flightstatus, ticket, taller);
-						if (taller == true)
-							if (subroot->BF == -1) {
-								leftBalance(subroot);
-								taller = false;
-							}
-							else if (subroot->BF == 0) {
-								subroot->BF = left_higher;
-							}
-							else if (subroot->BF == 1) {
-								subroot->BF = equal_height;
-								taller = false;
-							}
-					}
-					else {
-						result = recursiveInsert(subroot->right, flightcode, acnumber, airport, time,
-							flightstatus, ticket, taller);
-						if (taller == true)
-							if (subroot->BF == -1) {
-								subroot->BF = equal_height;
-								taller = false;
-							}
-							else if (subroot->BF == 0) {
-								subroot->BF = right_higher;
-							}
-							else if (subroot->BF == 1) {
-								rightBalance(subroot);
-								taller = false;
-							}
-					}
+	else if (subroot->FlightCode.compare(flightcode) < 0) {
+			result = recursiveInsert(subroot->left, flightcode, acnumber, airport, time,
+				flightstatus, ticket, taller);
+			if (taller == true)
+				if (subroot->BF == -1) {
+					leftBalance(subroot);
+					taller = false;
+				}
+				else if (subroot->BF == 0) {
+					subroot->BF = -1;
+				}
+				else if (subroot->BF == 1) {
+					subroot->BF = 0;
+					taller = false;
+				}
+	}
+	else {
+		result = recursiveInsert(subroot->right, flightcode, acnumber, airport, time,
+			flightstatus, ticket, taller);
+		if (taller == true)
+			if (subroot->BF == -1) {
+				subroot->BF = 0;
+				taller = false;
+			}
+			else if (subroot->BF == 0) {
+				subroot->BF = 1;
+			}
+			else if (subroot->BF == 1) {
+				rightBalance(subroot);
+				taller = false;
+			}
+	}
 	subroot->height = 1 + (subroot->left->height > subroot->right->height 
 		? subroot->left->height : subroot->right->height);
 	return result;
@@ -141,26 +137,26 @@ void FlightList::rotateRight(Flight* subroot) {
 void FlightList::rightBalance(Flight* subroot) {
 	Flight* rightTree = subroot->right;
 	if (rightTree->BF == 1) {
-		subroot->BF = equal_height;
-		rightTree->BF = equal_height;
+		subroot->BF = 0;
+		rightTree->BF = 0;
 		rotateLeft(subroot);
 	}
 	if (rightTree->BF == -1) {
 		Flight* subtree = rightTree->left;
-		subtree->BF = equal_height;
+		subtree->BF = 0;
 		rotateRight(rightTree);
 		rotateLeft(subroot);
 		if (subtree->BF == 0) {
-			subroot->BF = equal_height;
-			rightTree->BF = equal_height;
+			subroot->BF = 0;
+			rightTree->BF = 0;
 		}
 		else if (subtree->BF == -1) {
-			subroot->BF = equal_height;
-			rightTree->BF = right_higher;
+			subroot->BF = 0;
+			rightTree->BF = 1;
 		}
 		else {
-			subroot->BF = left_higher;
-			rightTree->BF = equal_height;
+			subroot->BF = -1;
+			rightTree->BF = 0;
 		}
 	}
 }
@@ -168,32 +164,79 @@ void FlightList::rightBalance(Flight* subroot) {
 void FlightList::leftBalance(Flight* subroot) {
 	Flight* leftTree = subroot->left;
 	if (leftTree->BF == -1) {
-		subroot->BF = equal_height;
-		leftTree->BF = equal_height;
+		subroot->BF = 0;
+		leftTree->BF = 0;
 		rotateRight(subroot);
 	}
 	if (leftTree->BF == 1) {
 		Flight* subtree = leftTree->right;
-		subtree->BF = equal_height;
+		subtree->BF = 0;
 		rotateLeft(leftTree);
 		rotateRight(subroot);
 		if (subtree->BF == 0) {
-			subroot->BF = equal_height;
-			leftTree->BF = equal_height;
+			subroot->BF = 0;
+			leftTree->BF = 0;
 		}
 		else if (subtree->BF == -1) {
-			subroot->BF = right_higher;
-			leftTree->BF = equal_height;
+			subroot->BF = 1;
+			leftTree->BF = 0;
 		}
 		else {
-			subroot->BF = equal_height;
-			leftTree->BF = left_higher;
+			subroot->BF = 0;
+			leftTree->BF = -1;
 		}
 	}
 }
 
-void FlightList::clear() {
-	
+bool FlightList::deleteFlight(const string& flightcode) {
+	return recursiveDelete(root, flightcode);
+}
+
+bool FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
+	if (subroot == nullptr)
+		return false;
+	else if (flightcode < subroot->FlightCode)
+		return recursiveDelete(subroot->left, flightcode);
+	else if (flightcode > subroot->FlightCode)
+		return recursiveDelete(subroot->right, flightcode);
+	else {
+		removeNode(subroot);
+		return true;
+	}
+}
+
+void FlightList::removeNode(Flight* subroot) {
+	Flight* pDel = subroot;
+	if (subroot->left == nullptr)
+		subroot = subroot->right;
+	else if (subroot->right == nullptr)
+		subroot = subroot->left;
+	else {
+		Flight* parent = subroot;
+		pDel = parent->left;
+		while (pDel->right != nullptr) {
+			parent = pDel;
+			pDel = pDel->right;
+		}
+		copyFlightData(subroot, pDel);
+		if (parent == subroot)
+			parent->left = pDel->left;
+		else
+			parent->right = pDel->left;
+		delete pDel;
+		pDel = nullptr;
+	}
+}
+
+void FlightList::copyFlightData(Flight* lhs, Flight* rhs) {
+	lhs->FlightCode = rhs->FlightCode;
+	lhs->ACNumber = rhs->ACNumber;
+	lhs->AirPort = rhs->AirPort;
+	lhs->BF = rhs->BF;
+	lhs->Flight_Status = rhs->Flight_Status;
+	lhs->height = rhs->height;
+	lhs->ticketList = rhs->ticketList;
+	lhs->time = rhs->time;
 }
 
 bool FlightList::operator!() const {
@@ -248,7 +291,7 @@ Flight::Flight(string acnumber, string flightcode, string airport, string exactd
 	strtok(NULL, " :-/");
 	ticketList = new Flight::Ticket();
 	left = right = nullptr;
-	BF = equal_height;
+	BF = 0;
 	height = 0;
 }
 
@@ -257,25 +300,65 @@ bool Flight::operator==(const Flight& rhs) const {
 		this->time->_month == rhs.time->_month &&
 		this->time->_day == rhs.time->_day &&
 		this->time->_hour == rhs.time->_hour &&
-		this->time->_minute == rhs.time->_minute);
+		this->time->_minute == rhs.time->_minute && 
+		this->ACNumber.compare(rhs.ACNumber) == 0 && 
+		this->AirPort.compare(rhs.AirPort) == 0);
 }
 
 bool Flight::operator<(const Flight& rhs) const {
-	if (this->time->_year >= rhs.time->_year)
-		if (this->time->_month >= rhs.time->_month)
-			if (this->time->_day >= rhs.time->_day)
-				if (this->time->_hour >= rhs.time->_hour)
-					if (this->time->_minute >= rhs.time->_minute)
-						return false;
-	return true;
+	if (this->time->_year < rhs.time->_year)
+		return true;
+	else if (this->time->_year == rhs.time->_year) {
+		if (this->time->_month < rhs.time->_month)
+			return true;
+		else if (this->time->_month == rhs.time->_month) {
+			if (this->time->_day < rhs.time->_day)
+				return true;
+			else if (this->time->_day == rhs.time->_day) {
+				if (this->time->_hour < rhs.time->_hour)
+					return true;
+				else if (this->time->_hour == rhs.time->_hour) {
+					if (this->time->_minute < rhs.time->_minute)
+						return true;
+					else if (this->time->_minute == rhs.time->_minute) {
+						if (this->ACNumber.compare(rhs.ACNumber) < 0)
+							return true;
+						else if (this->ACNumber.compare(rhs.ACNumber) == 0)
+							if (this->AirPort.compare(rhs.AirPort) < 0)
+								return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
 
 bool Flight::operator>(const Flight& rhs) const {
-	if (this->time->_year <= rhs.time->_year)
-		if (this->time->_month <= rhs.time->_month)
-			if (this->time->_day <= rhs.time->_day)
-				if (this->time->_hour <= rhs.time->_hour)
-					if (this->time->_minute <= rhs.time->_minute)
-						return false;
-	return true;
+	if (this->time->_year > rhs.time->_year)
+		return true;
+	else if (this->time->_year == rhs.time->_year) {
+		if (this->time->_month > rhs.time->_month)
+			return true;
+		else if (this->time->_month == rhs.time->_month) {
+			if (this->time->_day > rhs.time->_day)
+				return true;
+			else if (this->time->_day == rhs.time->_day) {
+				if (this->time->_hour > rhs.time->_hour)
+					return true;
+				else if (this->time->_hour == rhs.time->_hour) {
+					if (this->time->_minute > rhs.time->_minute)
+						return true;
+					else if (this->time->_minute == rhs.time->_minute) {
+						if (this->ACNumber.compare(rhs.ACNumber) > 0)
+							return true;
+						else if (this->ACNumber.compare(rhs.ACNumber) == 0)
+							if (this->AirPort.compare(rhs.AirPort) > 0)
+								return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }

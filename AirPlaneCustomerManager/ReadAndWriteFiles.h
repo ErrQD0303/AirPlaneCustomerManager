@@ -57,9 +57,11 @@ void FlightList::readFlightFile() { // ok
 			ifs >> temp;
 			ifs >> ticket->IDNumber[temp - 1];
 		}
+		insertFlight(flightcode, acnumber, airport, time, (FlightStatus)flightstatus, ticket);
 		ifs.ignore();
 	}
 	ifs.close();
+	delete[] input;
 }
 
 void FlightList::writeFlightFile(Flight* subroot) {

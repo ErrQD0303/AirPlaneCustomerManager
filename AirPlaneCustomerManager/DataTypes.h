@@ -44,8 +44,6 @@ enum FlightStatus {
 	ONTIME = 0, DELAY, FLYING, COMPLETE
 };
 
-enum Balance_factor {left_higher = -1, equal_height, right_higher};
-
 class Flight {
 	friend class FlightList;
 private:
@@ -77,7 +75,7 @@ private:
 	Ticket* ticketList;
 	Flight* left;
 	Flight* right;
-	Balance_factor BF;
+	int BF;
 	int height;
 
 	Flight(string = "", string = "", string = "", string = "00:00-01/01/2022",
@@ -125,6 +123,10 @@ public:
 	void rotateRight(Flight*);
 	void rightBalance(Flight*);
 	void leftBalance(Flight*);
+	bool deleteFlight(const string&);
+	bool recursiveDelete(Flight*, const string&);
+	void removeNode(Flight*);
+	void copyFlightData(Flight*, Flight*);
 	void clear();
 	Flight::Time* timeParse(const string&);
 	void readFlightFile();
