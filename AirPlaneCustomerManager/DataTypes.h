@@ -55,6 +55,9 @@ private:
 		int ticketSold;
 		Ticket(int = 1, int = 1, int = 0);
 		Ticket(string*, int = 1, int = 1, int = 0);
+		~Ticket() {
+			delete[] IDNumber;
+		}
 	};
 	typedef class Ticket TICKET;
 
@@ -79,7 +82,7 @@ private:
 	int height;
 
 	Flight(string = "", string = "", string = "", string = "00:00-01/01/2022",
-		FlightStatus = ONTIME, int = 0);
+		FlightStatus = ONTIME, Ticket* = new Ticket);
 
 	~Flight() {
 		delete ticketList, time;
@@ -117,15 +120,14 @@ public:
 	}
 	bool insertFlight(const string&, const string&, const string&, 
 		const string&, const FlightStatus&, Flight::Ticket*);
-	bool recursiveInsert(Flight*, const string&, const string&, const string&,
-		const string&, const FlightStatus&, Flight::Ticket*, bool&);
-	void rotateLeft(Flight*);
-	void rotateRight(Flight*);
-	void rightBalance(Flight*);
-	void leftBalance(Flight*);
+	Flight* recursiveInsert(Flight*, Flight*, bool&);
+	Flight* rotateLeft(Flight*);
+	Flight* rotateRight(Flight*);
 	bool deleteFlight(const string&);
-	bool recursiveDelete(Flight*, const string&);
-	void removeNode(Flight*);
+	Flight* recursiveDelete(Flight*, const string&);
+	int height(Flight*);
+	Flight* minValueFlight(Flight*);
+	int getBalanceFactor(Flight*);
 	void copyFlightData(Flight*, Flight*);
 	void clear();
 	Flight::Time* timeParse(const string&);
