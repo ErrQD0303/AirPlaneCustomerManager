@@ -121,10 +121,13 @@ Flight* FlightList::rotateRight(Flight* subroot) {
 }
 
 bool FlightList::deleteFlight(const string& flightcode) {
-	return recursiveDelete(root, flightcode);
+	bool check;
+	return recursiveDelete(root, flightcode, check);
+	return check;
 }
 
-Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
+Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode, 
+	bool& check) {
 	if (subroot == nullptr)
 		return subroot;
 	else if (flightcode.compare(subroot->FlightCode) < 0)

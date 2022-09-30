@@ -104,7 +104,6 @@ class FlightList {
 private:
 	Flight* root;
 	int fCount;
-	int treeHeight;
 	static FlightList* flightlist;
 	static mutex mLocker;
 	FlightList();
@@ -124,7 +123,7 @@ public:
 	Flight* rotateLeft(Flight*);
 	Flight* rotateRight(Flight*);
 	bool deleteFlight(const string&);
-	Flight* recursiveDelete(Flight*, const string&);
+	Flight* recursiveDelete(Flight*, const string&, bool&);
 	int height(Flight*);
 	Flight* minValueFlight(Flight*);
 	int getBalanceFactor(Flight*);
