@@ -79,7 +79,6 @@ private:
 	Flight* left;
 	Flight* right;
 	int BF;
-	int height;
 
 	Flight(string = "", string = "", string = "", string = "00:00-01/01/2022",
 		FlightStatus = ONTIME, Ticket* = new Ticket);

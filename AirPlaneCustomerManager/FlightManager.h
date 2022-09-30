@@ -43,7 +43,7 @@ FlightList::FlightList() {
 }
 
 FlightList::~FlightList() {
-
+	
 }
 
 bool FlightList::insertFlight(const string& flightcode, const string& acnumber, 
@@ -52,7 +52,9 @@ bool FlightList::insertFlight(const string& flightcode, const string& acnumber,
 	Flight* newflight = new Flight(flightcode, acnumber, airport, time, 
 		flightstatus, ticket);
 	bool check = true;
-	recursiveInsert(root, newflight, check);
+	root = recursiveInsert(root, newflight, check);
+	if (check == true)
+		fCount++;
 	return check;
 }
 
@@ -91,8 +93,6 @@ Flight* FlightList::recursiveInsert(Flight* subroot, Flight* newflight,
 		subroot->right = rotateRight(subroot->right);
 		return rotateLeft(subroot);
 	}
-	subroot->height = 1 + (subroot->left->height > subroot->right->height 
-		? subroot->left->height : subroot->right->height);
 	return subroot;
 }
 
@@ -100,11 +100,6 @@ Flight* FlightList::rotateLeft(Flight* subroot) {
 	Flight* rightTree = subroot->right;
 	subroot->right = rightTree->left;
 	rightTree->left = subroot;
-	subroot->left->height = 1 +
-		(subroot->left->left->height > subroot->left->right->height
-			? subroot->left->left->height : subroot->left->right->height);
-	subroot->height = 1 + (subroot->left->height > subroot->right->height
-		? subroot->left->height : subroot->right->height);
 	return rightTree;
 }
 
@@ -112,28 +107,27 @@ Flight* FlightList::rotateRight(Flight* subroot) {
 	Flight* leftTree = subroot->left;
 	subroot->left = leftTree->right;
 	leftTree->right = subroot;
-	subroot->right->height = 1 +
-		(subroot->right->left->height > subroot->right->right->height
-			? subroot->right->left->height : subroot->right->right->height);
-	subroot->height = 1 + (subroot->left->height > subroot->right->height
-		? subroot->left->height : subroot->right->height);
 	return leftTree;
 }
 
 bool FlightList::deleteFlight(const string& flightcode) {
-	bool check;
-	return recursiveDelete(root, flightcode, check);
+	bool check = true;
+	root = recursiveDelete(root, flightcode, check);
+	if (check == true)
+		fCount--;
 	return check;
 }
 
 Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode, 
 	bool& check) {
-	if (subroot == nullptr)
+	if (subroot == nullptr) {
+		check = false;
 		return subroot;
+	}
 	else if (flightcode.compare(subroot->FlightCode) < 0)
-		subroot->left = recursiveDelete(subroot->left, flightcode);
+		subroot->left = recursiveDelete(subroot->left, flightcode, check);
 	else if (flightcode.compare(subroot->FlightCode) > 0)
-		subroot->right = recursiveDelete(subroot->right, flightcode);
+		subroot->right = recursiveDelete(subroot->right, flightcode, check);
 	else {
 		Flight* temp = nullptr;
 		if (subroot->left == nullptr) {
@@ -149,19 +143,34 @@ Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode,
 		else {
 			temp = minValueFlight(subroot->right);
 			copyFlightData(subroot, temp);
-			subroot->right = recursiveDelete(subroot->right, flightcode);
+			subroot->right = recursiveDelete(subroot->right, flightcode, check);
 		}
 	}
-	subroot->height = 1 + (subroot->left->height > subroot->right->height
-		? subroot->left->height : subroot->right->height);
 	int bf = getBalanceFactor(subroot);
-	if (bf == 2 && getBalanceFactor(subroot->left) >= 0);
+	if (bf == 2 && getBalanceFactor(subroot->left) >= 0)
+		return rotateRight(subroot);
+	else if (bf == 2 && getBalanceFactor(subroot->left) == -1) {
+		subroot->left = rotateLeft(subroot->left);
+		return rotateRight(subroot);
+	}
+	else if (bf == -2 && getBalanceFactor(subroot->right) <= 0)
+		return rotateLeft(subroot);
+	else if (bf == -2 && getBalanceFactor(subroot->right) == 1) {
+		subroot->right = rotateRight(subroot->right);
+		return rotateLeft(subroot);
+	}
 }
 
 int FlightList::height(Flight* flight) {
 	if (flight == nullptr)
-		return 0;
-	return flight->height;
+		return -1;
+	else {
+		int lheight = height(flight->left);
+		int rheight = height(flight->right);
+		if (lheight > rheight)
+			return (lheight + 1);
+		return rheight + 1;
+	}
 }
 
 Flight* FlightList::minValueFlight(Flight* parent) {
@@ -185,7 +194,6 @@ void FlightList::copyFlightData(Flight* lhs, Flight* rhs) {
 	lhs->AirPort = rhs->AirPort;
 	lhs->BF = rhs->BF;
 	lhs->Flight_Status = rhs->Flight_Status;
-	lhs->height = rhs->height;
 	lhs->time = rhs->time;
 	lhs->ticketList->IDNumber = rhs->ticketList->IDNumber;
 	lhs->ticketList->n = rhs->ticketList->n;
@@ -251,7 +259,6 @@ Flight::Flight(string acnumber, string flightcode, string airport, string exactd
 	NumberOfFlight = 0;
 	left = right = nullptr;
 	BF = 0;
-	height = 0;
 }
 
 bool Flight::operator==(const Flight& rhs) const {
