@@ -64,9 +64,14 @@ void FlightList::readFlightFile() { // ok
 	delete[] input;
 }
 
-void FlightList::writeFlightFile(Flight* subroot) {
+void FlightList::writeFile() {
 	std::ofstream ofs;
 	ofs.open("Flight.txt");
+	writeFlightFile(root, ofs);
+	ofs.close();
+}
+
+void FlightList::writeFlightFile(Flight* subroot, std::ofstream& ofs) {
 	if (subroot == nullptr)
 		return;
 	if (subroot != root)
@@ -95,7 +100,6 @@ void FlightList::writeFlightFile(Flight* subroot) {
 				<< subroot->ticketList->IDNumber[i];
 		}
 	}
-	writeFlightFile(subroot->left);
-	writeFlightFile(subroot->right);
-	ofs.close();
+	writeFlightFile(subroot->left, ofs);
+	writeFlightFile(subroot->right, ofs);
 }

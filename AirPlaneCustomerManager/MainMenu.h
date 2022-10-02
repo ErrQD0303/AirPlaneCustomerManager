@@ -15,6 +15,7 @@ void MainMenu() {
 	airCraftList* AC = new airCraftList();
 	readAirCraftFile(AC);
 	FlightList* FL = FlightList::getInstance();
+	FL->readFlightFile();
 main_menu:
 	showCur(0);
 	flushConsoleInputBuffer();
@@ -136,7 +137,7 @@ main_menu:
 		break;
 	}
 	case 2: {
-
+		FMMainInterface(FL, AC);
 		break;
 	}
 	case 9:

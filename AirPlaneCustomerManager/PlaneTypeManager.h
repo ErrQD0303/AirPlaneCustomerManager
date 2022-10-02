@@ -833,6 +833,17 @@ char* airCraftList::getACType(const char* acType) const {
 	return b;
 }
 
+char* airCraftList::getACTypeByNumber(const char* acNumber) const {
+	for (int i = 0; i < TotalAC; i++) {
+		if (strcmp(acNumber, ACList[i]->ACNumber) == 0)
+			return ACList[i]->ACType;
+	}
+	char* b = new char[2];
+	b[0] = '.';
+	b[1] = '\0';
+	return b;
+}
+
 char* airCraftList::getACType(const int& pos) const {
 	if (pos >= 0 && pos < TotalAC) {
 		return ACList[pos]->ACType;

@@ -25,7 +25,8 @@ public:
 	void editAirCraft(char* acNumber, char* acType, int totalSeats, const int& pos);
 	void deleteAirCraft(const int& pos);
 	char* getACNumber(const char* acNumber) const;
-	char* getACType(const char* acNumber) const;
+	char* getACType(const char* acType) const;
+	char* getACTypeByNumber(const char* acNumber) const;
 	int getTotalSeats(const char* acNumber) const; 
 	char* getACNumber(const int& pos) const;
 	char* getACType(const int& pos) const;
@@ -132,8 +133,12 @@ public:
 	const Flight* searchFlight(const string&) const;
 	Flight::Time* timeParse(const string&);
 	void readFlightFile();
-	void writeFlightFile(Flight*);
+	void writeFile();
+	void writeFlightFile(Flight*, std::ofstream&);
 	bool operator!() const;
+	void FMPrintFlightInforMainInterface(airCraftList*, int) const;
+	void inOrderDFT(Flight*, vector<Flight*>&) const;
+	int getTotalFlight() const;
 };
 typedef class FlightList FLIGHTLIST;
 
