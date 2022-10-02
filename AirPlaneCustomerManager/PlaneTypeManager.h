@@ -43,7 +43,6 @@ void PMMainInterface(airCraftList* AC) {
 		if (inputChar == 72 && page > 0)
 			page--;
 	} while (inputChar != 27);
-	AC->writeAirCraftFile();
 }
 
 void PMAddInterface(airCraftList* AC) {
@@ -99,6 +98,16 @@ void PMAddInterface(airCraftList* AC) {
 	gotoxy(10, 1);
 	std::cout << b;
 	system("pause");*/
+	system("cls");
+	gotoxy(55, 13);
+	std::cout << "Adding Plane";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
 	delete[] totalSeats;
 }
 
@@ -472,6 +481,43 @@ void block_char(char* b, int a, int x, int y)
 	}
 }
 
+void block_char_number(char* b, int a, int x, int y)
+{
+	b[0] = '\0';
+	int i = 0;
+	char inputChar;
+	gotoxy(x, y);
+	while (1)
+	{
+		inputChar = _getch();
+		if (i <= a && inputChar >= 48 && inputChar <= 57) {
+			gotoxy(x + i, y);
+			b[i] = inputChar;
+			std::cout << inputChar;
+			i++;
+		}
+		if (inputChar == 8 && i > 0) { // BackSPace
+			gotoxy(x + i - 1, y);
+			std::cout << " ";
+			gotoxy(x + i - 1, y);
+			i--;
+		}
+		if (inputChar == 27) { // ESC
+			b[0] = '.';
+			b[1] = '\0';
+			return;
+		}
+		if (inputChar == 13) { // ENTER
+			b[i] = '\0';
+			return;
+		}
+		if (i == a + 1) {
+			b[i] = '\0';
+			return;
+		}
+	}
+}
+
 void block_char_search_PM(char* b, int a, int x, int y, airCraftList* AC) {
 	//showCur(0);
 	b[0] = '\0';
@@ -655,7 +701,7 @@ search:
 						}
 					}
 				}
-				else if (inputChar == 80) {  // fix position 24/9
+				else if (inputChar == 80) {  
 					if (key < 18 && key < count1 - 1 && count2 < count1 - 1) {
 						//if (key)
 						gotoxy(2, 7 + key); std::cout << "   ";
@@ -857,6 +903,14 @@ char* airCraftList::getACType(const int& pos) const {
 int airCraftList::getTotalSeats(const char* acType) const {
 	for (int i = 0; i < TotalAC; i++) {
 		if (strcmp(acType, ACList[i]->ACType) == 0)
+			return ACList[i]->TotalSeats;
+	}
+	return 0;
+}
+
+int airCraftList::getTotalSeatsByNumber(const char* acNumber) const {
+	for (int i = 0; i < TotalAC; i++) {
+		if (strcmp(acNumber, ACList[i]->ACNumber) == 0)
 			return ACList[i]->TotalSeats;
 	}
 	return 0;

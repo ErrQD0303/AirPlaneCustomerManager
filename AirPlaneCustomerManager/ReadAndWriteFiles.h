@@ -4,12 +4,16 @@
 #include "DataTypes.h"
 
 void readAirCraftFile(airCraftList* AC) {
-	char* planeType = new char[100];
-	char* planeNumber = new char[100];
 	int totalSeats;
 	std::ifstream ifs;
 	ifs.open("AirCraft.txt");
-	while (!ifs.eof()) {
+	if (ifs.peek() == '\0') {
+		ifs.close();
+		return;
+	}
+	char* planeType = new char[100];
+	char* planeNumber = new char[100];
+	while (ifs.eof() != true) {
 		ifs.getline(planeType, 100, '\n');
 		ifs.getline(planeNumber, 100,  '\n');
 		ifs >> totalSeats;
@@ -33,11 +37,15 @@ void airCraftList::writeAirCraftFile() {
 }
 
 void FlightList::readFlightFile() { // ok
-	char* input = new char[100];
 	string acnumber, flightcode, airport, time;
 	std::ifstream ifs;
 	int flightstatus;
-	ifs.open("Flight.txt");
+	ifs.open("Flight.txt"); 
+	if (ifs.peek() == '\0') {
+		ifs.close();
+		return;
+	}
+	char* input = new char[100];
 	while (!ifs.eof()) {
 		ifs.getline(input, 100, '\n');
 		flightcode.assign(input);
@@ -64,18 +72,20 @@ void FlightList::readFlightFile() { // ok
 	delete[] input;
 }
 
-void FlightList::writeFile() {
+void FlightList::writeFile(airCraftList* AC) {
 	std::ofstream ofs;
 	ofs.open("Flight.txt");
-	writeFlightFile(root, ofs);
+	writeFlightFile(root, AC, ofs);
 	ofs.close();
 }
 
-void FlightList::writeFlightFile(Flight* subroot, std::ofstream& ofs) {
+void FlightList::writeFlightFile(Flight* subroot, airCraftList* AC, std::ofstream& ofs) {
 	if (subroot == nullptr)
 		return;
 	if (subroot != root)
 		ofs << '\n';
+	subroot->ticketList->n = AC->getTotalSeatsByNumber(subroot->ACNumber.c_str());
+	subroot->ticketList->ticketLeft = subroot->ticketList->n - subroot->ticketList->ticketSold;
 	ofs << subroot->FlightCode << '\n'
 		<< subroot->ACNumber << '\n'
 		<< subroot->AirPort << '\n'
@@ -94,12 +104,12 @@ void FlightList::writeFlightFile(Flight* subroot, std::ofstream& ofs) {
 		<< subroot->ticketList->n << '\n'
 		<< subroot->ticketList->ticketSold << '\n'
 		<< subroot->ticketList->ticketLeft;
-	for (int i = 0; i < subroot->ticketList->n; i++) {
+	for (int i = 0; i < subroot->ticketList->ticketSold; i++) {
 		if (subroot->ticketList->IDNumber[i].compare("") != 0) {
 			ofs << '\n' << i + 1 << '\n' 
 				<< subroot->ticketList->IDNumber[i];
 		}
 	}
-	writeFlightFile(subroot->left, ofs);
-	writeFlightFile(subroot->right, ofs);
+	writeFlightFile(subroot->left, AC, ofs);
+	writeFlightFile(subroot->right, AC, ofs);
 }

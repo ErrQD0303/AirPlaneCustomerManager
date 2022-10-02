@@ -31,6 +31,7 @@ public:
 	char* getACNumber(const int& pos) const;
 	char* getACType(const int& pos) const;
 	int getTotalSeats(const int& pos) const;
+	int getTotalSeatsByNumber(const char* acNumber) const;
 	void writeAirCraftFile();
 	void PMPrintPlaneTypeInforMainInterface(int j) const;
 	void PMPrintPlaneTypeInforSearchInterface(int j) const;
@@ -113,6 +114,8 @@ private:
 	Flight* rotateRight(Flight*);
 	Flight* recursiveDelete(Flight*, const string&);
 	void postOrderDeleteTree(Flight*);
+	Flight* minValueFlight(Flight*);
+	Flight::Time* timeParse(const string&);
 public:
 	static FlightList *getInstance() {
 		mLocker.lock();
@@ -124,19 +127,21 @@ public:
 	}
 	bool insertFlight(const string&, const string&, const string&, 
 		const string&, const FlightStatus&, Flight::Ticket*);
+	bool insertFlight(const string&, const string&, const string&,
+		const string&, const airCraftList*);
 	void deleteFlight(const string&);
 	int height(Flight*);
-	Flight* minValueFlight(Flight*);
 	int getBalanceFactor(Flight*);
 	void copyFlightData(Flight*, Flight*);
 	void clear();
 	const Flight* searchFlight(const string&) const;
-	Flight::Time* timeParse(const string&);
 	void readFlightFile();
-	void writeFile();
-	void writeFlightFile(Flight*, std::ofstream&);
+	void writeFile(airCraftList*);
+	void writeFlightFile(Flight*, airCraftList*, std::ofstream&);
 	bool operator!() const;
 	void FMPrintFlightInforMainInterface(airCraftList*, int) const;
+	void FMPrintFlightInforSearchInterface(airCraftList*, char*, 
+		int&, vector<int>) const;
 	void inOrderDFT(Flight*, vector<Flight*>&) const;
 	int getTotalFlight() const;
 };
