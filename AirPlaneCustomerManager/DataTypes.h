@@ -139,9 +139,13 @@ public:
 	void writeFile(airCraftList*);
 	void writeFlightFile(Flight*, airCraftList*, std::ofstream&);
 	bool operator!() const;
-	void FMPrintFlightInforMainInterface(airCraftList*, int) const;
+	void FMPrintFlightInforMainInterface(const airCraftList*, int) const;
+	void FMPrintFlightInforSearchInterface(const airCraftList*, int) const;
 	void FMPrintFlightInforSearchInterface(airCraftList*, char*, 
-		int&, vector<int>) const;
+		int&, vector<Flight*>&, vector<Flight*>&) const;
+	void FMPrintFlightInforSearchInterface(const airCraftList*, const char*,
+		int, const vector<Flight*>&, int) const;
+	void addFlightToVector(vector<Flight*>&) const;
 	void inOrderDFT(Flight*, vector<Flight*>&) const;
 	int getTotalFlight() const;
 };

@@ -1027,7 +1027,7 @@ void airCraftList::PMPrintPlaneTypeInforSearchInterface(char* c, int _count, vec
 		gotoxy(77, 7 + i); std::cout << std::setw(6) << std::setfill(' ') << " ";
 		gotoxy(107, 7 + i); std::cout << std::setw(11) << std::setfill(' ') << " ";
 	}
-	int count = 0, j = 0; 
+	int count = 0; 
 	if (c[0] == '.' && _count == TotalAC) {
 		PMPrintPlaneTypeInforSearchInterface(page);
 		return;

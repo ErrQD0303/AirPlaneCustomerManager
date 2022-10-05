@@ -110,6 +110,20 @@ void FMAddBox() { // fix
 	gotoxy(40, 15); std::cout << "Total Tickets: ";
 }
 
+void FMEditBox() { 
+	FMboxtong();
+	gotoxy(55, 3);
+	std::cout << std::setw(18) << std::setfill(' ') << ' ';
+	gotoxy(6, 4); std::cout << "Search Flight: "; // 32 - 4
+	boxnho(5, 18, 27, 29);
+	gotoxy(7, 28); std::cout << "<ESC>: EXIT";
+	boxnho(20, 36, 27, 29);
+	gotoxy(22, 28); std::cout << "<ENTER>: CHOOSE";
+	boxnho(95, 117, 27, 29);
+	gotoxy(97, 28); std::cout << "PAGE: ";
+}
+
+
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
 	std::cout << char(218) << std::setw(x2 - x1) << std::setfill(char(196))
