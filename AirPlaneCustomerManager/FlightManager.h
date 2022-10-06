@@ -9,6 +9,7 @@
 #include "ReadAndWriteFiles.h"
 #include <vector>
 #include <ctime>
+#include <sstream>
 
 string flightConditionPrint(const FlightStatus&);
 void FMSearchInterface(FlightList*, airCraftList*);
@@ -16,10 +17,6 @@ void FMEditInterface(FlightList*, airCraftList*);
 void FMDeleteInterface(FlightList*, airCraftList*);
 void block_char_search_FM(char*, int, int, int,
 	FlightList*, airCraftList*, vector<int>&);
-void block_char_edit_FM(char*, int, int, int,
-	FlightList*, airCraftList*, vector<Flight*>&);
-void block_char_delete_FM(char*, int, int, int,
-	FlightList*, airCraftList*, vector<Flight*>&);
 bool checkDay(int day, int month, int year);
 
 void FMMainInterface(FlightList* FL, airCraftList* AC) {
@@ -298,6 +295,7 @@ void FMAddInterface(FlightList* FL, airCraftList* AC, int& key, int pos) {
 		_time += year[i];
 	}
 	FL->insertFlight(flightcode, AC->getACNumber(pos), airport, _time, AC);
+	FL->writeFile(AC);
 	Sleep(400);
 	system("cls");
 	gotoxy(55, 13);
@@ -318,15 +316,467 @@ begin:
 	int page = 0;
 	showCur(1);
 	FL->FMPrintFlightInforSearchInterface(AC, 0);
-	char* ACNumber = new char[100];
+	char* flightcode = new char[100];
 	do {
-		block_char_edit_FM(ACNumber, 100, 21, 4, FL, AC, flight);
-	} while (strlen(ACNumber) == 0);
-	if (ACNumber[0] == '?')
+		FL->block_char_edit_FM(flightcode, 100, 21, 4, FL, AC, flight);
+	} while (strlen(flightcode) == 0);
+	if (flightcode[0] == '?')
 		goto begin;
-	if (ACNumber[0] == '.')
+	if (flightcode[0] == '.')
 		return;
-	delete[] ACNumber;
+	delete[] flightcode;
+}
+
+void FlightList::FMEditInterface(Flight* flight, airCraftList* AC) {
+	int i = 0, _month, _day, _year;
+	char* flightcode = new char[100];
+	char* airport = new char[100];
+	char* day = new char[100];
+	char* month = new char[100];
+	char* year = new char[100];
+	char* hour = new char[100];
+	char* min = new char[100];
+	char inputChar;
+	stringstream str;
+	flightcode = _strdup(flight->FlightCode.c_str());
+	airport = _strdup(flight->AirPort.c_str());
+	str << flight->time->_day;
+	if (flight->time->_day < 10) {
+		day[0] = '0';
+		day[1] = str.str().c_str()[0];
+		day[2] = '\0';
+	}
+	else {
+		std::string str1 = str.str();
+		strcpy(day, str1.c_str());
+	}
+	str = std::stringstream();
+	str << flight->time->_month;
+	if (flight->time->_month < 10) {
+		month[0] = '0';
+		month[1] = str.str().c_str()[0];
+		month[2] = '\0';
+	}
+	else {
+		std::string str1 = str.str();
+		strcpy(month, str1.c_str());
+	}
+	str = std::stringstream();
+	str << flight->time->_year;
+	{
+		std::string str1 = str.str();
+		strcpy(year, str1.c_str());
+	}
+	str = std::stringstream();
+	str << flight->time->_hour;
+	if (flight->time->_hour < 10) {
+		hour[0] = '0';
+		hour[1] = str.str().c_str()[0];
+		hour[2] = '\0';
+	}
+	else {
+		std::string str1 = str.str();
+		strcpy(hour, str1.c_str());
+	}
+	str = std::stringstream();
+	str << flight->time->_minute;
+	if (flight->time->_minute < 10) {
+		min[0] = '0';
+		min[1] = str.str().c_str()[0];
+		min[2] = '\0';
+	}
+	else {
+		std::string str1 = str.str();
+		strcpy(min, str1.c_str());
+	}
+int key = 0;
+begin:
+	showCur(0);
+	system("cls");
+	menuCurTime();
+	FMEditBox1();
+	flushConsoleInputBuffer();
+	gotoxy(55, 10);
+	if (flightcode[0] == '.')
+		flightcode = _strdup(flight->FlightCode.c_str());
+	std::cout << flightcode;
+	gotoxy(54, 11);
+	if (airport[0] == '.')
+		airport = _strdup(flight->AirPort.c_str());
+	std::cout << airport;
+	gotoxy(45, 12);
+	if (day[0] == '.') {
+		str = std::stringstream();
+		str << flight->time->_day;
+		if (flight->time->_day < 10) {
+			day[0] = '0';
+			day[1] = str.str().c_str()[0];
+			day[2] = '\0';
+		}
+		else {
+			std::string str1 = str.str();
+			strcpy(day, str1.c_str());
+		}
+	}
+	std::cout << day;
+	gotoxy(48, 12);
+	if (month[0] == '.') {
+		str = std::stringstream();
+		str << flight->time->_month;
+		if (flight->time->_month < 10) {
+			month[0] = '0';
+			month[1] = str.str().c_str()[0];
+			month[2] = '\0';
+		}
+		else {
+			std::string str1 = str.str();
+			strcpy(month, str1.c_str());
+		}
+	}
+	std::cout << month;
+	gotoxy(51, 12);
+	if (year[0] = '.') {
+		str = std::stringstream();
+		str << flight->time->_year;
+		std::string str1 = str.str();
+		strcpy(year, str1.c_str());
+	}
+	std::cout << year;
+	gotoxy(47, 13); 
+	if (hour[0] == '.') {
+		str = std::stringstream();
+		str << flight->time->_hour;
+		if (flight->time->_hour < 10) {
+			hour[0] = '0';
+			hour[1] = str.str().c_str()[0];
+			hour[2] = '\0';
+		}
+		else {
+			std::string str1 = str.str();
+			strcpy(hour, str1.c_str());
+		}
+	}
+	std::cout << hour;
+	gotoxy(50, 13);
+	if (min[0] == '.') {
+		str = std::stringstream();
+		str << flight->time->_minute;
+		if (flight->time->_minute < 10) {
+			min[0] = '0';
+			min[1] = str.str().c_str()[0];
+			min[2] = '\0';
+		}
+		else {
+			std::string str1 = str.str();
+			strcpy(min, str1.c_str());
+		}
+	}
+	std::cout << min;
+	while (1) {
+		gotoxy(36, 10 + key); std::cout << "==>";
+		inputChar = _getch();
+		if (inputChar == 72) {
+			gotoxy(36, 10 + key); std::cout << "   ";
+			if (key == 0)
+				key = 4;
+			else
+				key--;
+			gotoxy(36, 10 + key); std::cout << "==>";
+		}
+		if (inputChar == 80) {
+			gotoxy(36, 10 + key); std::cout << "   ";
+			if (key == 4)
+				key = 0;
+			else
+				key++;
+			gotoxy(36, 10 + key); std::cout << "==>";
+		}
+		if (inputChar == 27) {
+			goto endedit;
+		}
+		if (inputChar == 13) {
+			gotoxy(36, 10 + key); std::cout << "   ";
+			break;
+		}
+	}
+	showCur(1);
+	switch (key) {
+	case 0: {
+	editI:
+		showCur(1);
+		do {
+			gotoxy(55, 10);
+			std::cout << std::setw(31) << std::setfill(' ') << "";
+			block_char(flightcode, 20, 55, 10);
+			if (flightcode[0] == '.') {
+				break;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(37) << std::setfill(' ') << "";
+			if (strlen(flightcode) > 20) {
+				gotoxy(88, 5);
+				std::cout << "Flight Code has max 20 characters!!!";
+			}
+		} while (strlen(flightcode) == 0 || strlen(flightcode) > 20);
+		goto begin;
+	}
+
+	case 1: {
+		do {
+			gotoxy(54, 11);
+			std::cout << std::setw(31) << std::setfill(' ') << "";
+			block_char(airport, 20, 54, 11);
+			if (airport[0] == '.')
+				break;
+			gotoxy(88, 5);
+			std::cout << std::setw(33) << std::setfill(' ') << "";
+			if (strlen(flightcode) > 20) {
+				gotoxy(88, 5);
+				std::cout << "Airport has max 20 characters!!!";
+			}
+		} while (strlen(airport) == 0 || strlen(airport) > 20);
+		goto begin;
+	}
+
+	case 2: {
+	Rday:
+		do {
+			gotoxy(45, 12);
+			std::cout << std::setw(2) << std::setfill(' ') << "";
+			gotoxy(45, 12); std::cout << "  /";
+			block_char_number(day, 2, 45, 12);
+			if (day[0] == '.') {
+				goto begin;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(2) << std::setfill(' ') << "";
+			if (strlen(day) > 2) {
+				gotoxy(88, 5);
+				std::cout << "Day can't have more than two character!!!";
+				continue;
+			}
+			if (atoi(day) <= 0 || atoi(day) > 31) {
+				gotoxy(88, 5);
+				std::cout << "Day invalid!!! Input again";
+				continue;
+			}
+			if (atoi(day) < 10) {
+				if (strlen(day) == 1) {
+					day[1] = day[0];
+					day[0] = '0';
+					day[2] = '\0';
+				}
+				gotoxy(45, 12); std::cout << day;
+			}
+			break;
+		} while (1);
+		do {
+			gotoxy(48, 12);
+			std::cout << std::setw(2) << std::setfill(' ') << "";
+			gotoxy(48, 12); std::cout << "  /";
+			block_char_number(month, 2, 48, 12);
+			if (month[0] == '.') {
+				goto begin;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(33) << std::setfill(' ') << "";
+			if (strlen(month) > 2) {
+				gotoxy(88, 5);
+				std::cout << "Month can't have more than two character!!!";
+				continue;
+			}
+			if (atoi(month) <= 0 || atoi(month) > 12) {
+				gotoxy(88, 5);
+				std::cout << "Month invalid!!! Input again";
+				continue;
+			}
+			if (atoi(month) < 10) {
+				if (strlen(month) == 1) {
+					month[1] = month[0];
+					month[0] = '0';
+					month[2] = '\0';
+				}
+				gotoxy(48, 12); std::cout << month;
+			}
+			break;
+		} while (1);
+		do {
+			gotoxy(51, 12);
+			std::cout << std::setw(4) << std::setfill(' ') << "";
+			block_char_number(year, 20, 51, 12);
+			if (year[0] == '.') {
+				break;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(33) << std::setfill(' ') << "";
+			if (strlen(year) > 4) {
+				gotoxy(88, 5);
+				std::cout << "This isnt 10000 BC!!!";
+				continue;
+			}
+			if (atoi(year) < 1903) {
+				gotoxy(88, 5);
+				std::cout << "Plane hadn't been invented yet!";
+				continue;
+			}
+			_day = atoi(day);
+			_month = atoi(month);
+			_year = atoi(year);
+			if (checkDay(_day, _month, _year) == 0) {
+				gotoxy(88, 5);
+				std::cout << "Date invalid!!! Input again";
+				goto Rday;
+			}
+			break;
+		} while (1);		
+		goto begin;
+	}
+
+	case 3: {
+		do {
+			gotoxy(47, 13);
+			std::cout << std::setw(2) << std::setfill(' ') << "";
+			gotoxy(47, 13); std::cout << "  :";
+			block_char_number(hour, 2, 47, 13);
+			if (hour[0] == '.') {
+				goto begin;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(33) << std::setfill(' ') << "";
+			if (strlen(hour) > 2) {
+				gotoxy(88, 5);
+				std::cout << "Hour can't have more than two character!!!";
+				continue;
+			}
+			if (atoi(hour) == 24) {
+				hour[0] = '0';
+				hour[1] = '0';
+				hour[2] = '\0';
+				gotoxy(47, 13); std::cout << hour;
+				break;
+			}
+			if (atoi(hour) < 0 || atoi(hour) > 24) {
+				gotoxy(88, 5);
+				std::cout << "Hour invalid!!! Input again";
+				continue;
+			}
+			if (atoi(hour) < 10) {
+				if (strlen(hour) == 1) {
+					hour[1] = hour[0];
+					hour[0] = '0';
+					hour[2] = '\0';
+				}
+				gotoxy(47, 13); std::cout << hour;
+			}
+			break;
+		} while (1);
+		do {
+			gotoxy(50, 13);
+			std::cout << std::setw(3) << std::setfill(' ') << "";
+			block_char_number(min, 2, 50, 13);
+			if (min[0] == '.') {
+				break;
+			}
+			gotoxy(88, 5);
+			std::cout << std::setw(33) << std::setfill(' ') << "";
+			if (strlen(min) > 2) {
+				gotoxy(88, 5);
+				std::cout << "Minute can't have more than two character!!!";
+				continue;
+			}
+			if (atoi(min) == 60) {
+				min[0] = min[1] = '0';
+				min[2] = '\0';
+				gotoxy(50, 13); std::cout << min;
+			}
+			if (atoi(min) < 0 || atoi(min) > 60) {
+				gotoxy(88, 5);
+				std::cout << "Minute invalid!!! Input again";
+				continue;
+			}
+			if (atoi(min) < 10) {
+				if (strlen(min) == 1) {
+					min[1] = min[0];
+					min[0] = '0';
+					min[2] = '\0';
+				}
+				gotoxy(50, 13); std::cout << min;
+			}
+			break;
+		} while (1);
+		goto begin;
+	}
+
+	case 4: {
+		showCur(0);
+		system("cls");
+		PMSaveBox();
+		int inpt = 0;
+		do {
+			inputChar = _getch();
+			if (inputChar == 72) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				if (inpt == 0)
+					inpt = 1;
+				else
+					inpt = 0;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			if (inputChar == 80) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				if (inpt == 1)
+					inpt = 0;
+				else
+					inpt = 1;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			if (inputChar == 27)
+				goto begin;
+			if (inputChar == 13)
+				break;
+		} while (1);
+		if (inpt == 0)
+			break;
+		else
+			goto begin;
+		}
+	}	
+	if (flight->AirPort.compare(airport) != 0) {
+		flight->AirPort.assign(airport);
+	}
+	if (flight->FlightCode.compare(flightcode) != 0) {
+		flight->FlightCode.assign(flightcode);
+	}
+	if (flight->time->_day != atoi(day)) {
+		flight->time->_day = atoi(day);
+	}
+	if (flight->time->_month != atoi(month)) {
+		flight->time->_month = atoi(month);
+	}
+	if (flight->time->_year != atoi(year)) {
+		flight->time->_year = atoi(year);
+	}
+	if (flight->time->_hour != atoi(hour)) {
+		flight->time->_hour = atoi(hour);
+	}
+	if (flight->time->_minute != atoi(min)) {
+		flight->time->_minute = atoi(min);
+	}
+	writeFile(AC);
+	Sleep(400);
+	system("cls");
+	gotoxy(55, 13);
+	std::cout << "Changing Flight";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
+	std::cout << ".";
+	Sleep(400);
+endedit:
+	delete[] flightcode, airport, day, month, year, hour, min;
+	return;
 }
 
 void FMDeleteInterface(FlightList* FL, airCraftList* AC) {
@@ -335,15 +785,15 @@ begin:
 	int page = 0;
 	showCur(1);
 	FL->FMPrintFlightInforSearchInterface(AC, 0);
-	char* ACNumber = new char[100];
+	char* flightcode = new char[100];
 	do {
-		block_char_edit_FM(ACNumber, 100, 21, 4, FL, AC, flight);
-	} while (strlen(ACNumber) == 0);
-	if (ACNumber[0] == '?')
+		FL->block_char_edit_FM(flightcode, 100, 21, 4, FL, AC, flight);
+	} while (strlen(flightcode) == 0);
+	if (flightcode[0] == '?')
 		goto begin;
-	if (ACNumber[0] == '.')
+	if (flightcode[0] == '.')
 		return;
-	delete[] ACNumber;
+	delete[] flightcode;
 }
 
 void block_char_search_FM(char* b, int a, int x, int y,
@@ -462,7 +912,7 @@ search:
 	}
 }
 
-void block_char_edit_FM(char* b, int a, int x, int y,
+void FlightList::block_char_edit_FM(char* b, int a, int x, int y,
 	FlightList* FL, airCraftList* AC, vector<Flight*>& flight) {
 	flight.clear();
 	FL->addFlightToVector(flight);
@@ -478,7 +928,7 @@ search:
 	while (1)
 	{
 		inputChar = _getch();
-		if (i < 6 && inputChar >= 48 && inputChar <= 122
+		if (i < 15 && inputChar >= 48 && inputChar <= 122
 			|| inputChar == 32) {
 			gotoxy(x + i, y);
 			b[i] = inputChar;
@@ -513,8 +963,10 @@ search:
 				count1 = -1;
 			if (count1 == 0)
 				continue;
-			if (count1 == -1)
+			if (count1 == -1) {
 				count1 = FL->getTotalFlight();
+				pos = flight;
+			}
 			showCur(0);
 			b[0] = '.';
 			b[1] = '\0';
@@ -522,7 +974,7 @@ search:
 			int count = count1 / 18;
 			int count2 = 0;
 		choose:
-			gotoxy(2, 9);
+			gotoxy(2, 8);
 			std::cout << "==>";
 			int key = 0;
 			char inputChar;
@@ -530,13 +982,13 @@ search:
 				inputChar = _getch();
 				if (inputChar == 72) {
 					if (key > 0) {
-						gotoxy(2, 9 + key); std::cout << "   ";
+						gotoxy(2, 8 + key); std::cout << "   ";
 						key--;
 						count2--;
 					}
 					else if (key == 0) {
 						if (page > 0 && page <= count) {
-							gotoxy(2, 9); std::cout << "   ";
+							gotoxy(2, 8); std::cout << "   ";
 							page--;
 							FL->FMPrintFlightInforSearchInterface(AC, b, count1, pos, page);			
 							gotoxy(x + i, y);
@@ -548,13 +1000,13 @@ search:
 				else if (inputChar == 80) {
 					if (key < 17 && key < count1 - 1 && count2 < count1 - 1) {
 						//if (key)
-						gotoxy(2, 9 + key); std::cout << "   ";
+						gotoxy(2, 8 + key); std::cout << "   ";
 						key++;
 						count2++;
 					}
 					else if (key == 17) {
 						if (page < count) {
-							gotoxy(2, 26); std::cout << "   ";
+							gotoxy(2, 25); std::cout << "   ";
 							page++;
 							count2++;
 							FL->FMPrintFlightInforSearchInterface(AC, b, count1, pos, page);
@@ -563,14 +1015,13 @@ search:
 						}
 					}
 				}
-				if (inputChar == 13) {
-					int key1 = 0;
-					//FMAddInterface(FL, AC, key1, pos[count2]);
+				if (inputChar == 13 && pos[count2]->Flight_Status == 0) {
+					FL->FMEditInterface(pos[count2], AC);
 					b[0] = '?';
 					b[1] = '\0';
 					return;
 				}
-				gotoxy(2, 9 + key);
+				gotoxy(2, 8 + key);
 				cout << "==>";
 			} while (inputChar != 27);
 			b[0] = '.';
@@ -580,7 +1031,7 @@ search:
 	}
 }
 
-void block_char_delete_FM(char* b, int a, int x, int y,
+void FlightList::block_char_delete_FM(char* b, int a, int x, int y,
 	FlightList* FL, airCraftList* AC, vector<Flight*>& flight) {
 	flight.clear();
 	FL->addFlightToVector(flight);
@@ -596,7 +1047,7 @@ search:
 	while (1)
 	{
 		inputChar = _getch();
-		if (i < 6 && inputChar >= 48 && inputChar <= 122
+		if (i < 15 && inputChar >= 48 && inputChar <= 122
 			|| inputChar == 32) {
 			gotoxy(x + i, y);
 			b[i] = inputChar;
@@ -640,7 +1091,7 @@ search:
 			int count = count1 / 18;
 			int count2 = 0;
 		choose:
-			gotoxy(2, 9);
+			gotoxy(2, 8);
 			std::cout << "==>";
 			int key = 0;
 			char inputChar;
@@ -648,13 +1099,13 @@ search:
 				inputChar = _getch();
 				if (inputChar == 72) {
 					if (key > 0) {
-						gotoxy(2, 9 + key); std::cout << "   ";
+						gotoxy(2, 8 + key); std::cout << "   ";
 						key--;
 						count2--;
 					}
 					else if (key == 0) {
 						if (page > 0 && page <= count) {
-							gotoxy(2, 9); std::cout << "   ";
+							gotoxy(2, 8); std::cout << "   ";
 							page--;
 							FL->FMPrintFlightInforSearchInterface(AC, b, count1, pos, page);
 							gotoxy(x + i, y);
@@ -666,13 +1117,13 @@ search:
 				else if (inputChar == 80) {
 					if (key < 17 && key < count1 - 1 && count2 < count1 - 1) {
 						//if (key)
-						gotoxy(2, 9 + key); std::cout << "   ";
+						gotoxy(2, 8 + key); std::cout << "   ";
 						key++;
 						count2++;
 					}
 					else if (key == 17) {
 						if (page < count) {
-							gotoxy(2, 26); std::cout << "   ";
+							gotoxy(2, 25); std::cout << "   ";
 							page++;
 							count2++;
 							FL->FMPrintFlightInforSearchInterface(AC, b, count1, pos, page);
@@ -688,7 +1139,7 @@ search:
 					b[1] = '\0';
 					return;
 				}
-				gotoxy(2, 9 + key);
+				gotoxy(2, 8 + key);
 				cout << "==>";
 			} while (inputChar != 27);
 			b[0] = '.';

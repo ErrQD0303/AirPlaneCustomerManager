@@ -110,7 +110,7 @@ void FMAddBox() { // fix
 	gotoxy(40, 15); std::cout << "Total Tickets: ";
 }
 
-void FMEditBox() { 
+void FMEditBox() {
 	FMboxtong();
 	gotoxy(55, 3);
 	std::cout << std::setw(18) << std::setfill(' ') << ' ';
@@ -123,6 +123,21 @@ void FMEditBox() {
 	gotoxy(97, 28); std::cout << "PAGE: ";
 }
 
+	void FMEditBox1() { // fix
+		boxnho(5, 29, 4, 6);
+		gotoxy(7, 5); std::cout << "Press <ESC> to go back";
+		gotoxy(55, 4); std::cout << "EDIT FLIGHT";
+		boxnho(86, 117, 4, 6);
+		boxnho(34, 85, 8, 23);
+		gotoxy(40, 10); std::cout << "Flight Code: ";
+		gotoxy(40, 11); std::cout << "Airport Come: ";
+		gotoxy(40, 12); std::cout << "Day: ";
+		gotoxy(47, 12); std::cout << '/';
+		gotoxy(50, 12); std::cout << '/';
+		gotoxy(40, 13); std::cout << "Time: ";
+		gotoxy(49, 13); std::cout << ':';
+		gotoxy(40, 14); std::cout << "Save and Exit!";
+	}
 
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);

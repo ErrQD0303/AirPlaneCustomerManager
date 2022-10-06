@@ -98,6 +98,7 @@ void PMAddInterface(airCraftList* AC) {
 	gotoxy(10, 1);
 	std::cout << b;
 	system("pause");*/
+	AC->writeAirCraftFile();
 	system("cls");
 	gotoxy(55, 13);
 	std::cout << "Adding Plane";
@@ -266,6 +267,7 @@ void PMEditInterface1(airCraftList* AC, int& key, int pos) {
 				switch (inpt) {
 				case 0: {
 					AC->editAirCraft(planeNumber, planeType, atoi(totalSeats), pos);
+					AC->writeAirCraftFile();
 					system("cls");
 					gotoxy(55, 13);
 					std::cout << "Saving";
@@ -353,6 +355,7 @@ void PMDeleteInterface1(airCraftList* AC, int& key, int pos) {
 	switch (inpt) {
 	case 0: {
 		AC->deleteAirCraft(pos);
+		AC->writeAirCraftFile();
 		system("cls");
 		gotoxy(55, 13);
 		std::cout << "Deleting";

@@ -139,6 +139,7 @@ public:
 	void writeFile(airCraftList*);
 	void writeFlightFile(Flight*, airCraftList*, std::ofstream&);
 	bool operator!() const;
+	void FMEditInterface(Flight*, airCraftList*);
 	void FMPrintFlightInforMainInterface(const airCraftList*, int) const;
 	void FMPrintFlightInforSearchInterface(const airCraftList*, int) const;
 	void FMPrintFlightInforSearchInterface(airCraftList*, char*, 
@@ -148,6 +149,10 @@ public:
 	void addFlightToVector(vector<Flight*>&) const;
 	void inOrderDFT(Flight*, vector<Flight*>&) const;
 	int getTotalFlight() const;
+	void block_char_edit_FM(char* b, int a, int x, int y,
+		FlightList* FL, airCraftList* AC, vector<Flight*>& flight);
+	void block_char_delete_FM(char* b, int a, int x, int y,
+		FlightList* FL, airCraftList* AC, vector<Flight*>& flight);
 };
 typedef class FlightList FLIGHTLIST;
 

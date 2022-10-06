@@ -141,8 +141,6 @@ main_menu:
 		break;
 	}
 	case 9:
-		FL->writeFile(AC);
-		AC->writeAirCraftFile();
 		delete AC;
 		AC = nullptr;
 		return;
