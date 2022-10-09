@@ -115,6 +115,7 @@ private:
 	Flight* recursiveDelete(Flight*, const string&);
 	void postOrderDeleteTree(Flight*);
 	Flight* minValueFlight(Flight*);
+	void writeFlightFile(Flight*, airCraftList*, std::ofstream&);
 	Flight::Time* timeParse(const string&);
 public:
 	static FlightList *getInstance() {
@@ -137,7 +138,6 @@ public:
 	const Flight* searchFlight(const string&) const;
 	void readFlightFile();
 	void writeFile(airCraftList*);
-	void writeFlightFile(Flight*, airCraftList*, std::ofstream&);
 	bool operator!() const;
 	void FMEditInterface(Flight*, airCraftList*);
 	void FMPrintFlightInforMainInterface(const airCraftList*, int) const;
@@ -158,4 +158,63 @@ typedef class FlightList FLIGHTLIST;
 
 FlightList* FlightList::flightlist = nullptr;
 mutex FlightList::mLocker;
+
+enum SEX {
+	NOINFOR = 0, MALE, FEMALE
+};
+
+class Passenger {
+	friend class PassengerList;
+private:
+	string sSID;
+	string lastName;
+	string firstName;
+	SEX sex;
+	Passenger* left;
+	Passenger* right;
+	int BF;
+	// private method
+	Passenger(string = "000000000", string = "", string = "",
+		SEX = NOINFOR);
+};
+
+class PassengerList {
+private:
+	Passenger* root;
+	int pCount;
+	static PassengerList* passengerlist;
+	static mutex mLocker1;
+	PassengerList();
+	~PassengerList();
+	Passenger* recursiveInsert(Passenger*, Passenger*, bool&);
+	Passenger* rotateLeft(Passenger*);
+	Passenger* rotateRight(Passenger*);
+	Passenger* recursiveDelete(Passenger*, const string&);
+	void postOrderDeleteTree(Passenger*);
+	Passenger* minValuePassenger(Passenger*);
+public:
+	static PassengerList* getInstance() {
+		mLocker1.lock();
+		if (passengerlist == nullptr) {
+			passengerlist = new PassengerList();
+		}
+		mLocker1.unlock();
+		return passengerlist;
+	}
+	bool insertPassenger(const string&, const string&, const string&,
+		const SEX&);
+	void deletePassenger(const string&);
+	int height(Passenger*);
+	int getBalanceFactor(Passenger*);
+	void copyPassengerData(Passenger*, Passenger*);
+	void clear();
+	const Passenger* searchPassenger(const string&) const;	
+	void addPassengerToVector(vector<Passenger*>&) const;
+	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
+	int getTotalPassenger() const;
+};
+
+PassengerList* PassengerList::passengerlist = nullptr;
+mutex PassengerList::mLocker1;
+
 #endif

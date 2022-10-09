@@ -16,8 +16,6 @@ int main() {
 	//	std::cout << token << "\n";
 	//	token = std::strtok(NULL, " !");
 	//
-	/*FlightList* k = FLIGHTLIST::getInstance();
-	std::cout << k->readFlightFile();*/
 	MainMenu();
 	return 0;
 }

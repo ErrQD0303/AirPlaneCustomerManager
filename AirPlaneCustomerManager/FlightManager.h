@@ -1632,6 +1632,7 @@ Flight* FlightList::recursiveDelete(Flight* subroot, const string& flightcode) {
 		subroot->right = rotateRight(subroot->right);
 		return rotateLeft(subroot);
 	}
+	return subroot;
 }
 
 const Flight* FlightList::searchFlight(const string& flightcode) const {
@@ -1659,11 +1660,9 @@ int FlightList::height(Flight* flight) {
 }
 
 Flight* FlightList::minValueFlight(Flight* parent) {
-	Flight* p = parent->right;
-	while (p->left != nullptr) {
-		parent = p;
+	Flight* p = parent;
+	while (p->left != nullptr)
 		p = p->left;
-	}
 	return p;
 }
 
@@ -1677,7 +1676,6 @@ void FlightList::copyFlightData(Flight* lhs, Flight* rhs) {
 	lhs->FlightCode = rhs->FlightCode;
 	lhs->ACNumber = rhs->ACNumber;
 	lhs->AirPort = rhs->AirPort;
-	lhs->BF = rhs->BF;
 	lhs->Flight_Status = rhs->Flight_Status;
 	lhs->time->_day = rhs->time->_day;
 	lhs->time->_month = rhs->time->_month;
