@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include "DataTypes.h"
+#include "PassengerManager.h"
 
 void readAirCraftFile(airCraftList* AC) {
 	int totalSeats;
@@ -121,24 +122,24 @@ void PassengerList::readPassengerFile() {
 		ifs.close();
 		return;
 	}
-	string sSID, lN, fN;
+	std::string ssid, lN, fN;
 	SEX sex;
 	char* input = new char[100];
 	while (!ifs.eof()) {
 		ifs.getline(input, 100, '\n');
-		sSID.assign(input);
+		ssid.assign(input);
 		ifs.getline(input, 100, '\n');
 		lN.assign(input);
 		ifs.getline(input, 100, '\n');
 		fN.assign(input);
 		ifs.getline(input, 100, '\n');
-		if (input == "male")
+		if (input == "MALE")
 			sex = (SEX)1;
-		else if (input == "female")
+		else if (input == "FEMALE")
 			sex = (SEX)2;
 		else
 			sex = (SEX)0;
-		insertPassenger(sSID, lN, fN, sex);
+		insertPassenger(ssid, lN, fN, sex);
 		ifs.ignore();
 	}
 	ifs.close();

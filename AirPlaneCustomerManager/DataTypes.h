@@ -177,6 +177,7 @@ private:
 	Passenger(string = "000000000", string = "", string = "",
 		SEX = NOINFOR);
 };
+typedef class Passenger PASSENGER;
 
 class PassengerList {
 private:
@@ -202,7 +203,9 @@ public:
 		mLocker1.unlock();
 		return passengerlist;
 	}
-	bool insertPassenger(const string&, const string&, const string&,
+	void readPassengerFile();
+	void writeFile();
+	bool insertPassenger(const std::string&, const std::string&, const std::string&,
 		const SEX&);
 	void deletePassenger(const string&);
 	int height(Passenger*);
@@ -213,9 +216,8 @@ public:
 	void addPassengerToVector(vector<Passenger*>&) const;
 	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
 	int getTotalPassenger() const;
-	void readPassengerFile();
-	void writeFile();
 };
+typedef class PassengerList PASSENGERLIST;
 
 PassengerList* PassengerList::passengerlist = nullptr;
 mutex PassengerList::mLocker1;
