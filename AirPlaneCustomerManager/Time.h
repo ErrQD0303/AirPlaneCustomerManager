@@ -13,7 +13,7 @@ void curTime(int& year, int& month,
 	month = 1 + ct->tm_mon;
 	day = ct->tm_mday;
 	hour = ct->tm_hour;
-	min = 1 + ct->tm_min;
+	min = ct->tm_min;
 }
 
 void menuCurTime() {

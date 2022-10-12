@@ -192,6 +192,7 @@ private:
 	Passenger* recursiveDelete(Passenger*, const string&);
 	void postOrderDeleteTree(Passenger*);
 	Passenger* minValuePassenger(Passenger*);
+	void writePassengerFile(Passenger*, std::ofstream&);
 public:
 	static PassengerList* getInstance() {
 		mLocker1.lock();
@@ -212,6 +213,8 @@ public:
 	void addPassengerToVector(vector<Passenger*>&) const;
 	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
 	int getTotalPassenger() const;
+	void readPassengerFile();
+	void writeFile();
 };
 
 PassengerList* PassengerList::passengerlist = nullptr;

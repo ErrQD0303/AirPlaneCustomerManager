@@ -113,3 +113,52 @@ void FlightList::writeFlightFile(Flight* subroot, airCraftList* AC, std::ofstrea
 	writeFlightFile(subroot->left, AC, ofs);
 	writeFlightFile(subroot->right, AC, ofs);
 }
+
+void PassengerList::readPassengerFile() {
+	std::ifstream ifs;
+	ifs.open("Passenger.txt");
+	if (ifs.peek() == '\0') {
+		ifs.close();
+		return;
+	}
+	string sSID, lN, fN;
+	SEX sex;
+	char* input = new char[100];
+	while (!ifs.eof()) {
+		ifs.getline(input, 100, '\n');
+		sSID.assign(input);
+		ifs.getline(input, 100, '\n');
+		lN.assign(input);
+		ifs.getline(input, 100, '\n');
+		fN.assign(input);
+		ifs.getline(input, 100, '\n');
+		if (input == "male")
+			sex = (SEX)1;
+		else if (input == "female")
+			sex = (SEX)2;
+		else
+			sex = (SEX)0;
+		insertPassenger(sSID, lN, fN, sex);
+		ifs.ignore();
+	}
+	ifs.close();
+	delete[] input;
+}
+
+void PassengerList::writeFile() {
+	std::ofstream ofs;
+	ofs.open("Passenger.txt");
+	writePassengerFile(root, ofs);
+	ofs.close();
+}
+
+void PassengerList::writePassengerFile(Passenger* subroot, std::ofstream& ofs) {
+	if (subroot == nullptr)
+		return;
+	if (subroot != root)
+		ofs << "\n";
+	ofs << subroot->sSID << "\n" << subroot->firstName << "\n"
+		<< subroot->lastName << "\n" << subroot->sex;
+	writePassengerFile(subroot->left, ofs);
+	writePassengerFile(subroot->right, ofs);
+}
