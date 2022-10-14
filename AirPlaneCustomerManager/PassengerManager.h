@@ -11,6 +11,29 @@
 #include <ctime>
 #include <sstream>
 
+void PaMMainInterface(PassengerList* PL) {
+	int page = 0;
+	char inputChar;
+	do {
+	PaMStartingPage:
+		showCur(0);
+		PL->PaMPrintFlightInforMainInterface(PL, page);
+		inputChar = _getch();
+		//if (inputChar == 59) // F1
+		//	FMSearchInterface(PL);
+		//if (inputChar == 61) //F3
+		//	FMEditInterface(PL);
+		//if (inputChar == 83) // Delete
+		//	FMDeleteInterface(PL);
+		if (inputChar == 80 && PL->getTotalPassenger() / 19 * (page + 1) > 0
+			&& page < PL->getTotalPassenger() / 19) {
+			page++;
+		} // up 
+		if (inputChar == 72 && page > 0)
+			page--; // down
+	} while (inputChar != 27); // esc
+}
+
 // PassengerList class definition
 PassengerList::PassengerList() {
 	root = nullptr;
@@ -65,11 +88,11 @@ Passenger* PassengerList::recursiveInsert(Passenger* subroot, Passenger* newpass
 	if (bf < -1 && newpassenger->sSID.compare(subroot->right->sSID) > 0)
 		return rotateLeft(subroot);
 	if (bf > 1 && newpassenger->sSID.compare(subroot->left->sSID) > 0) {
-		rotateLeft(subroot->left);
+		subroot->left = rotateLeft(subroot->left);
 		return rotateRight(subroot);
 	}
 	if (bf < -1 && newpassenger->sSID.compare(subroot->right->sSID) < 0) {
-		rotateRight(subroot->right);
+		subroot->right = rotateRight(subroot->right);
 		return rotateLeft(subroot);
 	}
 	return subroot;
@@ -122,14 +145,14 @@ Passenger* PassengerList::recursiveDelete(Passenger* subroot, const string& ssid
 	if (bf == 2 && getBalanceFactor(subroot->left) >= 0)
 		return rotateRight(subroot);
 	else if (bf == 2 && getBalanceFactor(subroot->left) == -1) {
-		rotateLeft(subroot->left);
+		subroot->left = rotateLeft(subroot->left);
 		return rotateRight(subroot);
 	}
-	else if (bf == 2 && getBalanceFactor(subroot->right) <= 0)
+	else if (bf == -2 && getBalanceFactor(subroot->right) <= 0)
 		return rotateLeft(subroot);
-	else if (bf == 2 && getBalanceFactor(subroot->right) > 0) {
-		rotateLeft(subroot->right);
-		return rotateRight(subroot);
+	else if (bf == -2 && getBalanceFactor(subroot->right) == 1) {
+		subroot->right = rotateRight(subroot->right);
+		return rotateLeft(subroot);
 	}
 	return subroot;
 }
@@ -190,9 +213,43 @@ int PassengerList::getTotalPassenger() const {
 	return pCount;
 }
 
+void PassengerList::PaMPrintFlightInforMainInterface(const PassengerList* PL,
+	int j) const {
+	vector<Passenger*> v;
+	inOrderDFT(this->root, v);
+	system("cls");
+	menuCurTime();
+	PaMMainBox();
+	char* input = new char[100];
+	gotoxy(103, 28); std::cout << j + 1 << "/" << (v.size() / 19) + 1;
+	for (int i = 19 * j; (i < v.size() && i < 19 * (j + 1)) || (i == 0 && v.size() == 1); i++) {
+		gotoxy(7, 7 + i % 19); std::cout << i + 1;
+		gotoxy(23, 7 + i % 19); std::cout << v[i]->sSID;
+		gotoxy(66, 7 + i % 19); std::cout << v[i]->lastName;
+		gotoxy(66 + v[i]->lastName.length() + 1, 7 + i % 19);
+		std::cout << v[i]->firstName;
+		gotoxy(108, 7 + i % 19);
+		switch (v[i]->sex) {
+		case 0: {
+			std::cout << "NO-INFOR";
+			break;
+		}
+		case 1: {
+			std::cout << "  MALE";
+			break;
+		}
+		case 2: {
+			std::cout << " FEMALE";
+			break;
+		}
+		}
+	}
+	delete[] input;
+}
+
 // Passengers class definition
 Passenger::Passenger(string ssid, string ln, string fn, SEX sex)
-	: sSID(sSID), lastName(ln), firstName(fn), sex(sex) {
+	: sSID(ssid), lastName(ln), firstName(fn), sex(sex) {
 	left = right = nullptr;
 	BF = 0;
 }

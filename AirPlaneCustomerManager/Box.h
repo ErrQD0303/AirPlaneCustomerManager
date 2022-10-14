@@ -9,6 +9,7 @@
 void boxnho(int, int, int, int);
 void PMboxtong();
 void FMboxtong();
+void PaMboxtong();
 
 // Plane Manager Box
 void PMMainBox() {
@@ -123,21 +124,36 @@ void FMEditBox() {
 	gotoxy(97, 28); std::cout << "PAGE: ";
 }
 
-	void FMEditBox1() { // fix
-		boxnho(5, 29, 4, 6);
-		gotoxy(7, 5); std::cout << "Press <ESC> to go back";
-		gotoxy(55, 4); std::cout << "EDIT FLIGHT";
-		boxnho(86, 117, 4, 6);
-		boxnho(34, 85, 8, 23);
-		gotoxy(40, 10); std::cout << "Flight Code: ";
-		gotoxy(40, 11); std::cout << "Airport Come: ";
-		gotoxy(40, 12); std::cout << "Day: ";
-		gotoxy(47, 12); std::cout << '/';
-		gotoxy(50, 12); std::cout << '/';
-		gotoxy(40, 13); std::cout << "Time: ";
-		gotoxy(49, 13); std::cout << ':';
-		gotoxy(40, 14); std::cout << "Save and Exit!";
-	}
+void FMEditBox1() { // fix
+	boxnho(5, 29, 4, 6);
+	gotoxy(7, 5); std::cout << "Press <ESC> to go back";
+	gotoxy(55, 4); std::cout << "EDIT FLIGHT";
+	boxnho(86, 117, 4, 6);
+	boxnho(34, 85, 8, 23);
+	gotoxy(40, 10); std::cout << "Flight Code: ";
+	gotoxy(40, 11); std::cout << "Airport Come: ";
+	gotoxy(40, 12); std::cout << "Day: ";
+	gotoxy(47, 12); std::cout << '/';
+	gotoxy(50, 12); std::cout << '/';
+	gotoxy(40, 13); std::cout << "Time: ";
+	gotoxy(49, 13); std::cout << ':';
+	gotoxy(40, 14); std::cout << "Save and Exit!";
+}
+
+// Passenger Manager Box
+void PaMMainBox() {
+	PaMboxtong();
+	boxnho(5, 18, 27, 29);
+	gotoxy(7, 28); std::cout << "<ESC>: EXIT";
+	boxnho(20, 31, 27, 29);
+	gotoxy(22, 28); std::cout << "<F1>: ADD";
+	boxnho(33, 45, 27, 29);
+	gotoxy(35, 28); std::cout << "<F3>: EDIT";
+	boxnho(47, 65, 27, 29);
+	gotoxy(49, 28); std::cout << "<DELETE>: DELETE";
+	boxnho(95, 117, 27, 29);
+	gotoxy(97, 28); std::cout << "PAGE: ";
+}
 
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
@@ -266,4 +282,33 @@ void FMboxtong() {
 	gotoxy(95, 6); std::cout << "MIN";
 	gotoxy(99, 6); std::cout << "TICKETS";
 	gotoxy(107, 6); std::cout << "FLIGHT COND";
+}
+
+void PaMboxtong() {
+	boxnho(5, 117, 1, 26);
+	boxnho(5, 12, 4, 26);
+	boxnho(13, 40, 4, 26);
+	boxnho(41, 103, 4, 26);
+	boxnho(104, 117, 4, 26);
+	boxnho(5, 117, 1, 4);
+	boxnho(5, 117, 4, 6);
+	boxnoi0(13, 4);
+	boxnoi0(41, 4);
+	boxnoi0(104, 4);
+	boxnoi1(13, 26);
+	boxnoi1(41, 26);
+	boxnoi1(104, 26);
+	boxnoi2(5, 4);
+	boxnoi2(5, 6);
+	boxnoi3(118, 4);
+	boxnoi3(118, 6);
+	boxnoi4(13, 6);
+	boxnoi4(41, 6);
+	boxnoi4(104, 6);
+	gotoxy(54, 3);
+	std::cout << "MANAGE PASSENGER";
+	gotoxy(7, 5); std::cout << "INDEX";
+	gotoxy(18, 5); std::cout << "Social Security ID";
+	gotoxy(66, 5); std::cout << "Passenger Name";
+	gotoxy(110, 5); std::cout << "Sex";
 }

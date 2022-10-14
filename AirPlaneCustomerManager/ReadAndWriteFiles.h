@@ -133,14 +133,13 @@ void PassengerList::readPassengerFile() {
 		ifs.getline(input, 100, '\n');
 		fN.assign(input);
 		ifs.getline(input, 100, '\n');
-		if (input == "MALE")
+		if (strcmp(input, "MALE") == 0)
 			sex = (SEX)1;
-		else if (input == "FEMALE")
+		else if (strcmp(input, "FEMALE") == 0)
 			sex = (SEX)2;
 		else
 			sex = (SEX)0;
 		insertPassenger(ssid, lN, fN, sex);
-		ifs.ignore();
 	}
 	ifs.close();
 	delete[] input;

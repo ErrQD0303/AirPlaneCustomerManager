@@ -16,6 +16,8 @@ void MainMenu() {
 	readAirCraftFile(AC);
 	FlightList* FL = FlightList::getInstance();
 	FL->readFlightFile();
+	PassengerList* PL = PassengerList::getInstance();
+	PL->readPassengerFile();
 main_menu:
 	showCur(0);
 	flushConsoleInputBuffer();
@@ -24,7 +26,7 @@ main_menu:
 	char menu_option[9][100] = {
 	"1) Plane Type Management ",
 	"2) Plane Flight Management",
-	"3) Customer Management ",
+	"3) Passenger Management ",
 	"4) Book & Cancle ",
 	"5) Flight List Statistics ",
 	"6) Ticket Left in Flight ",
@@ -138,6 +140,10 @@ main_menu:
 	}
 	case 2: {
 		FMMainInterface(FL, AC);
+		break;
+	}
+	case 3: {
+		PaMMainInterface(PL);
 		break;
 	}
 	case 9:

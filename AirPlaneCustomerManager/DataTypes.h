@@ -216,6 +216,7 @@ public:
 	void addPassengerToVector(vector<Passenger*>&) const;
 	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
 	int getTotalPassenger() const;
+	void PaMPrintFlightInforMainInterface(const PassengerList*, int) const;
 };
 typedef class PassengerList PASSENGERLIST;
 
