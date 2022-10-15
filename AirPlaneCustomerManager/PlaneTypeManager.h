@@ -459,17 +459,36 @@ void block_char(char* b, int a, int x, int y)
 	while (1)
 	{
 		inputChar = _getch();
-		if (i <= a && inputChar >= 48 && inputChar <= 122 
+		if ((i <= a && inputChar >= 48 && inputChar <= 122) 
 			|| inputChar == 32) {
 			gotoxy(x + i, y);
 			b[i] = inputChar;
-			std::cout << inputChar;
+			if (i < 40)
+				std::cout << inputChar;
+			else {
+				gotoxy(x + i % 40, y + 1);
+				std::cout << inputChar;
+			}
 			i++;
 		}
 		if (inputChar == 8 && i > 0) {
-			gotoxy(x + i - 1, y);
-			std::cout << " ";
-			gotoxy(x + i - 1, y);
+			if (i == 40) {
+				gotoxy(x + (i - 1) % 40, y + 1);
+				std::cout << " ";
+				gotoxy(x + i - 1, y);
+			}
+			else {				
+				if (i < 40) {
+					gotoxy(x + i - 1, y);
+					std::cout << " ";
+					gotoxy(x + i - 1, y);
+				}
+				else {
+					gotoxy(x + (i - 1) % 40, y + 1);
+					std::cout << " ";
+					gotoxy(x + (i - 1) % 40, y + 1);
+				}
+			}
 			i--;
 		}
 		if (inputChar == 27) {

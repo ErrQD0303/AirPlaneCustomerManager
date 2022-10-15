@@ -129,9 +129,9 @@ void PassengerList::readPassengerFile() {
 		ifs.getline(input, 100, '\n');
 		ssid.assign(input);
 		ifs.getline(input, 100, '\n');
-		lN.assign(input);
-		ifs.getline(input, 100, '\n');
 		fN.assign(input);
+		ifs.getline(input, 100, '\n');
+		lN.assign(input);
 		ifs.getline(input, 100, '\n');
 		if (strcmp(input, "MALE") == 0)
 			sex = (SEX)1;

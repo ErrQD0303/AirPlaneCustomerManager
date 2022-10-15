@@ -155,6 +155,25 @@ void PaMMainBox() {
 	gotoxy(97, 28); std::cout << "PAGE: ";
 }
 
+void PaMAddBox() {
+	boxnho(5, 29, 3, 5);
+	gotoxy(7, 4); std::cout << "Press <ESC> to go back";
+	gotoxy(52, 2); std::cout << "EDIT PASSENGER";
+	boxnho(86, 117, 3, 6);
+	boxnho(34, 85, 8, 12);
+}
+
+void SexBox() {
+	boxnho(50, 62, 13, 16);
+	gotoxy(51, 14); 
+	std::cout << std::setw(12) << std::setfill(' ') << "";
+	gotoxy(52, 14); std::cout << "==>";
+	gotoxy(56, 14);
+	std::cout << "MALE";
+	gotoxy(56, 15); 
+	std::cout << "FEMALE";
+}
+
 void boxnho(int x1, int x2, int y1, int y2) {
 	gotoxy(x1, y1);
 	std::cout << char(218) << std::setw(x2 - x1) << std::setfill(char(196))

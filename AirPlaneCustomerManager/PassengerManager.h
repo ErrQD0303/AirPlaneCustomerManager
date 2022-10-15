@@ -10,17 +10,23 @@
 #include <vector>
 #include <ctime>
 #include <sstream>
+#include "PlaneTypeManager.h"
+
+void PaMAddInterface(PassengerList*, vector<Passenger*>&);
+void block_char(char*, int, int, int);
+void block_char_number(char*, int, int, int);
 
 void PaMMainInterface(PassengerList* PL) {
 	int page = 0;
 	char inputChar;
+	vector<Passenger*> v;
 	do {
 	PaMStartingPage:
 		showCur(0);
-		PL->PaMPrintFlightInforMainInterface(PL, page);
+		PL->PaMPrintFlightInforMainInterface(PL, page, v);
 		inputChar = _getch();
-		//if (inputChar == 59) // F1
-		//	FMSearchInterface(PL);
+		if (inputChar == 59) // F1
+			PaMAddInterface(PL, v);
 		//if (inputChar == 61) //F3
 		//	FMEditInterface(PL);
 		//if (inputChar == 83) // Delete
@@ -32,6 +38,152 @@ void PaMMainInterface(PassengerList* PL) {
 		if (inputChar == 72 && page > 0)
 			page--; // down
 	} while (inputChar != 27); // esc
+}
+
+void PaMAddInterface(PassengerList* PL, vector<Passenger*>& v) {
+	system("cls");
+	PaMAddBox();
+	menuCurTime();
+	flushConsoleInputBuffer();
+	char inputChar;
+	char* ssid = new char[13];
+	char* Name = new char[80];
+	char* token = new char[80];
+	string lName, fName;
+	ssid[0] = Name[0] = token[0] = '\0';
+	SEX sex = { NOINFOR };
+	do {
+	addI:
+		do {
+			gotoxy(36, 10); std::cout << "SSID: ";
+			if (ssid[0] != '\0') {
+				std::cout << std::setw(12) << std::setfill(' ') << "";
+			}
+			showCur(1);
+			block_char_number(ssid, 12, 42, 10);
+			if (ssid[0] == '.') {
+				// PaMSearchInterface(PL);
+				return;
+			}
+			gotoxy(88, 4);
+			std::cout << std::setw(30) << std::setfill(' ') << ""; 
+			gotoxy(88, 5);
+			std::cout << std::setw(30) << std::setfill(' ') << "";
+			showCur(0);
+			for (int i = 0; i < v.size(); i++)
+				if (strcmp(PL->getSSID(v[i]), ssid) == 0) {
+					goto Err;
+				}
+			if (strlen(ssid) == 0 || strlen(ssid) != 12 && strlen(ssid) != 9) {
+				Err:
+				gotoxy(88, 4);
+				std::cout << "Invalid Social Security ID!!!";
+				gotoxy(88, 5);
+				std::cout << "Please input again!";
+				continue;
+			}
+			break;
+		} while (1);
+		gotoxy(34, 12);
+		std::cout << std::setw(85 - 33) << std::setfill(' ') << "";
+		boxnho(34, 85, 8, 13);
+		do {
+			gotoxy(36, 11); std::cout << "Name: ";
+			if (Name[0] != '\0') {
+				std::cout << std::setw(40) << std::setfill(' ') << "";
+				if (strlen(Name) > 40)
+					std::cout << std::setw(strlen(Name) - 40)
+					<< std::setfill(' ') << "";
+			}
+			showCur(1);
+			block_char(Name, 80, 42, 11);
+			if (Name[0] == '.') {
+				// PaMSearchInterface(PL);
+				return;
+			}
+			gotoxy(88, 4);
+			std::cout << std::setw(30) << std::setfill(' ') << "";
+			gotoxy(88, 5);
+			std::cout << std::setw(30) << std::setfill(' ') << "";
+			showCur(0);
+			char c[100];
+			strcpy(c, Name);
+			token = std::strtok(c, " ");
+			if (strlen(Name) == 0 || strlen(token) == strlen(Name) 
+				|| strlen(token) + 1 == strlen(Name)) {
+				gotoxy(88, 4);
+				std::cout << "Invalid Name!!!";
+				gotoxy(88, 5);
+				std::cout << "Please input again!";
+				continue;
+			}
+			lName.assign(token);
+			token = strtok(NULL, "");
+			fName.assign(token);
+			break;
+			Sleep(400);
+		} while (1); 
+		gotoxy(34, 13);
+		std::cout << std::setw(85 - 33) << std::setfill(' ') << "";
+		boxnho(34, 85, 8, 14);
+		gotoxy(36, 12); std::cout << "Sex: ";
+		SexBox();
+		int inpt = 0;
+		do {
+			inputChar = _getch();
+			if (inputChar == 27) {
+				system("cls");
+				return;
+			}
+			if (inputChar == 13)
+				break;
+			if (inputChar == 72)
+				if (inpt == 1) {
+					gotoxy(52, 14 + inpt); std::cout << "   ";
+					inpt--;
+					gotoxy(52, 14 + inpt); std::cout << "==>";
+				}
+				else {
+					gotoxy(52, 14 + inpt); std::cout << "   ";
+					inpt = 1;
+					gotoxy(52, 14 + inpt); std::cout << "==>";
+				}
+			if (inputChar == 80)
+				if (inpt == 0) {
+					gotoxy(52, 14 + inpt); std::cout << "   ";
+					inpt++;
+					gotoxy(52, 14 + inpt); std::cout << "==>";
+				}
+				else {
+					gotoxy(52, 14 + inpt); std::cout << "   ";
+					inpt = 0;
+					gotoxy(52, 14 + inpt); std::cout << "==>";
+				}
+		} while (1);
+		switch (inpt) {
+		case 0: {
+			sex = MALE;
+			break;
+		}
+		case 1: {
+			sex = FEMALE;
+			break;
+		}
+		}
+		PL->insertPassenger(ssid, lName, fName, sex);
+		PL->writeFile(); Sleep(400);
+		system("cls");
+		gotoxy(55, 13);
+		std::cout << "Adding Flight";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		break;
+	} while (1);
+	delete[] ssid, Name, token;
 }
 
 // PassengerList class definition
@@ -213,9 +365,15 @@ int PassengerList::getTotalPassenger() const {
 	return pCount;
 }
 
+char* PassengerList::getSSID(const Passenger* passenger) const {
+	char b[100];
+	strcpy(b, passenger->sSID.c_str());
+	return b;
+}
+
 void PassengerList::PaMPrintFlightInforMainInterface(const PassengerList* PL,
-	int j) const {
-	vector<Passenger*> v;
+	int j, vector<Passenger*>& v) const {
+	v.clear();
 	inOrderDFT(this->root, v);
 	system("cls");
 	menuCurTime();

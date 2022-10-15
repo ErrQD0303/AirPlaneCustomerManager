@@ -15,6 +15,7 @@ int main() {
 	//while (token != nullptr) {
 	//	std::cout << token << "\n";
 	//	token = std::strtok(NULL, " !");
+	PaMAddBox();
 	MainMenu();
 	return 0;
 }
