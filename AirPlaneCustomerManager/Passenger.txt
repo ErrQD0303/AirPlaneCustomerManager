@@ -1,6 +1,6 @@
-225810556
+225810557
 Nguyen
-Quoc Thang
+Quoc Thinh
 1
 225810445
 Nguyen
@@ -18,11 +18,3 @@ Quoc Dat
 Nguyen
 Thi Le Tuyet
 0
-225810557
-Nguyen
-Quoc Thinh
-1
-542100565
-Nguyen
-Thi
-1

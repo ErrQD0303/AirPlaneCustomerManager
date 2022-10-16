@@ -165,6 +165,14 @@ void PaMAddBox() {
 	boxnho(34, 85, 8, 12);
 }
 
+void PaMEditBox() {
+	boxnho(5, 29, 3, 5);
+	gotoxy(7, 4); std::cout << "Press <ESC> to go back";
+	gotoxy(52, 2); std::cout << "EDIT PASSENGER";
+	boxnho(86, 117, 3, 6);
+	boxnho(34, 85, 8, 14);
+}
+
 void PaMSearchBox() {
 	PaMboxtong();
 	gotoxy(54, 2); std::cout << "SEARCH PASSENGER";

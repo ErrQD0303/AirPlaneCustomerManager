@@ -14,6 +14,7 @@
 
 void PaMAddInterface(PassengerList*, vector<Passenger*>&);
 void PaMSearchInterface(PassengerList*, vector<Passenger*>&, int);
+void PamDeleteInterface(PassengerList*, const string&);
 void block_char(char*, int, int, int);
 void block_char_number(char*, int, int, int);
 
@@ -28,8 +29,8 @@ void PaMMainInterface(PassengerList* PL) {
 		inputChar = _getch();
 		if (inputChar == 59) // F1
 			PaMAddInterface(PL, v);
-		if (inputChar == 61) //F3
-			PaMSearchInterface(PL, v, 1);
+		//if (inputChar == 61) //F3
+		//	PaMSearchInterface(PL, v, 1);
 		if (inputChar == 83) // Delete
 			PaMSearchInterface(PL, v, 1);
 		if (inputChar == 80 && PL->getTotalPassenger() / 19 * (page + 1) > 0
@@ -204,6 +205,65 @@ void PaMSearchInterface(PassengerList* PL, vector<Passenger*>& v,
 	if (input[0] == '.')
 		return;
 	delete[] input;
+}
+
+void PaMDeleteInterface(PassengerList* PL, const string& ssid) {
+	system("cls");
+	menuCurTime();
+	PMDeleteBox();
+	char inputChar;
+	int inpt = 0;
+	do {
+		inputChar = _getch();
+		if (inputChar == 72)
+			if (inpt == 1) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt--;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			else {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt = 1;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+		if (inputChar == 80)
+			if (inpt == 0) {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt++;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+			else {
+				gotoxy(56, 12 + inpt); std::cout << "   ";
+				inpt = 0;
+				gotoxy(56, 12 + inpt); std::cout << "==>";
+			}
+		if (inputChar == 27) {
+			system("cls");
+			return;
+		}
+		if (inputChar == 13)
+			break;
+	} while (1);
+	switch (inpt) {
+	case 0: {
+		PL->deletePassenger(ssid);
+		PL->writeFile();
+		system("cls");
+		gotoxy(55, 13);
+		std::cout << "Deleting";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		std::cout << ".";
+		Sleep(400);
+		break;
+	}
+	case 1: {
+		break;
+	}
+	}
 }
 
 // PassengerList class definition
@@ -619,10 +679,7 @@ search:
 					}
 				}
 				if (inputChar == 13 && function != 0) {
-					/*if (function == 1)
-						PaMEditInterface(pos[count2], AC);*/
-					/*else
-						PaMDeleteInterface();*/
+					PaMDeleteInterface(getInstance(), pos[count2]->sSID);
 					b[0] = '?';
 					b[1] = '\0';
 					return;
