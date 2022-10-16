@@ -217,6 +217,11 @@ public:
 	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
 	int getTotalPassenger() const;
 	char* getSSID(const Passenger*) const;
+	string getName(const Passenger*) const;
+	SEX getSex(const Passenger*) const;
+	void setSSID(const string&, Passenger*);
+	void setName(const string&, Passenger*);
+	void setSex(const SEX&, Passenger*);
 	void PaMPrintPassengerInforMainInterface(int, vector<Passenger*>&) const;
 	void PaMPrintPassengerInforSearchInterface(char*, int&, vector<Passenger*>&, vector<Passenger*>&);
 	void PaMPrintPassengerInforSearchInterface(const char*, int, const vector<Passenger*>&, int) const;

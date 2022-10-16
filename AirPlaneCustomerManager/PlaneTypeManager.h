@@ -473,7 +473,7 @@ void block_char(char* b, int a, int x, int y)
 		}
 		if (inputChar == 8 && i > 0) {
 			if (i == 40) {
-				gotoxy(x + (i - 1) % 40, y + 1);
+				gotoxy(x + (i - 1) % 40, y);
 				std::cout << " ";
 				gotoxy(x + i - 1, y);
 			}

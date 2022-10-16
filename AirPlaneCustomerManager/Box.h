@@ -170,7 +170,11 @@ void PaMEditBox() {
 	gotoxy(7, 4); std::cout << "Press <ESC> to go back";
 	gotoxy(52, 2); std::cout << "EDIT PASSENGER";
 	boxnho(86, 117, 3, 6);
-	boxnho(34, 85, 8, 14);
+	boxnho(30, 85, 8, 15);
+	gotoxy(36, 10); std::cout << "SSID: "; 
+	gotoxy(36, 11); std::cout << "Name: ";
+	gotoxy(36, 12); std::cout << "Sex: ";
+	gotoxy(36, 13); std::cout << "Save and Exit!";
 }
 
 void PaMSearchBox() {
@@ -198,6 +202,15 @@ void SexBox() {
 	std::cout << "MALE";
 	gotoxy(56, 15); 
 	std::cout << "FEMALE";
+}
+
+void deleteSexBox() {
+	for (int i = 0; i < 4; i++) {
+		gotoxy(50, 13 + i);
+		std::cout << std::setw(14) << std::setfill(' ') << "";
+	}
+	gotoxy(50, 15);
+	std::cout << std::setw(14) << std::setfill(char(196)) << "";
 }
 
 void boxnho(int x1, int x2, int y1, int y2) {
