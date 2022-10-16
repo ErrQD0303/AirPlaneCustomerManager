@@ -143,6 +143,8 @@ void FMEditBox1() { // fix
 // Passenger Manager Box
 void PaMMainBox() {
 	PaMboxtong();
+	gotoxy(54, 3);
+	std::cout << "MANAGE PASSENGER";
 	boxnho(5, 18, 27, 29);
 	gotoxy(7, 28); std::cout << "<ESC>: EXIT";
 	boxnho(20, 31, 27, 29);
@@ -161,6 +163,22 @@ void PaMAddBox() {
 	gotoxy(52, 2); std::cout << "EDIT PASSENGER";
 	boxnho(86, 117, 3, 6);
 	boxnho(34, 85, 8, 12);
+}
+
+void PaMSearchBox() {
+	PaMboxtong();
+	gotoxy(54, 2); std::cout << "SEARCH PASSENGER";
+	boxnho(5, 18, 27, 29);
+	gotoxy(7, 28); std::cout << "<ESC>: EXIT";
+	boxnho(20, 31, 27, 29);
+	gotoxy(22, 28); std::cout << "<F1>: ADD";
+	boxnho(33, 45, 27, 29);
+	gotoxy(35, 28); std::cout << "<F3>: EDIT";
+	boxnho(47, 65, 27, 29);
+	gotoxy(49, 28); std::cout << "<DELETE>: DELETE";
+	boxnho(95, 117, 27, 29);
+	gotoxy(97, 28); std::cout << "PAGE: ";
+	gotoxy(15, 3); std::cout << "Search Passengers By ID:";
 }
 
 void SexBox() {
@@ -324,8 +342,6 @@ void PaMboxtong() {
 	boxnoi4(13, 6);
 	boxnoi4(41, 6);
 	boxnoi4(104, 6);
-	gotoxy(54, 3);
-	std::cout << "MANAGE PASSENGER";
 	gotoxy(7, 5); std::cout << "INDEX";
 	gotoxy(18, 5); std::cout << "Social Security ID";
 	gotoxy(66, 5); std::cout << "Passenger Name";

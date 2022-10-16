@@ -13,6 +13,7 @@
 #include "PlaneTypeManager.h"
 
 void PaMAddInterface(PassengerList*, vector<Passenger*>&);
+void PaMSearchInterface(PassengerList*, vector<Passenger*>&, int);
 void block_char(char*, int, int, int);
 void block_char_number(char*, int, int, int);
 
@@ -23,14 +24,14 @@ void PaMMainInterface(PassengerList* PL) {
 	do {
 	PaMStartingPage:
 		showCur(0);
-		PL->PaMPrintFlightInforMainInterface(PL, page, v);
+		PL->PaMPrintPassengerInforMainInterface(page, v);
 		inputChar = _getch();
 		if (inputChar == 59) // F1
 			PaMAddInterface(PL, v);
-		//if (inputChar == 61) //F3
-		//	FMEditInterface(PL);
-		//if (inputChar == 83) // Delete
-		//	FMDeleteInterface(PL);
+		if (inputChar == 61) //F3
+			PaMSearchInterface(PL, v, 1);
+		if (inputChar == 83) // Delete
+			PaMSearchInterface(PL, v, 1);
 		if (inputChar == 80 && PL->getTotalPassenger() / 19 * (page + 1) > 0
 			&& page < PL->getTotalPassenger() / 19) {
 			page++;
@@ -62,7 +63,7 @@ void PaMAddInterface(PassengerList* PL, vector<Passenger*>& v) {
 			showCur(1);
 			block_char_number(ssid, 12, 42, 10);
 			if (ssid[0] == '.') {
-				// PaMSearchInterface(PL);
+				PaMSearchInterface(PL, v, 0);
 				return;
 			}
 			gotoxy(88, 4);
@@ -98,7 +99,7 @@ void PaMAddInterface(PassengerList* PL, vector<Passenger*>& v) {
 			showCur(1);
 			block_char(Name, 80, 42, 11);
 			if (Name[0] == '.') {
-				// PaMSearchInterface(PL);
+				PaMSearchInterface(PL, v, 0);
 				return;
 			}
 			gotoxy(88, 4);
@@ -133,6 +134,7 @@ void PaMAddInterface(PassengerList* PL, vector<Passenger*>& v) {
 			inputChar = _getch();
 			if (inputChar == 27) {
 				system("cls");
+				PaMSearchInterface(PL, v, 0);
 				return;
 			}
 			if (inputChar == 13)
@@ -184,6 +186,24 @@ void PaMAddInterface(PassengerList* PL, vector<Passenger*>& v) {
 		break;
 	} while (1);
 	delete[] ssid, Name, token;
+	PaMSearchInterface(PL, v, 0);
+	return;
+}
+
+void PaMSearchInterface(PassengerList* PL, vector<Passenger*>& v, 
+	int function) {
+	showCur(1);
+	char* input = new char[13]; 
+	begin:
+	PL->PaMPrintPassengerInforMainInterface(0, v);
+	do {
+		PL->block_char_search_PaM(input, 12, 40, 3, v, function);
+	} while (strlen(input) == 0);
+	if (input[0] == '?')
+		goto begin;
+	if (input[0] == '.')
+		return;
+	delete[] input;
 }
 
 // PassengerList class definition
@@ -371,13 +391,12 @@ char* PassengerList::getSSID(const Passenger* passenger) const {
 	return b;
 }
 
-void PassengerList::PaMPrintFlightInforMainInterface(const PassengerList* PL,
-	int j, vector<Passenger*>& v) const {
+void PassengerList::PaMPrintPassengerInforMainInterface(int j, vector<Passenger*>& v) const {
 	v.clear();
 	inOrderDFT(this->root, v);
 	system("cls");
 	menuCurTime();
-	PaMMainBox();
+	PaMSearchBox();
 	char* input = new char[100];
 	gotoxy(103, 28); std::cout << j + 1 << "/" << (v.size() / 19) + 1;
 	for (int i = 19 * j; (i < v.size() && i < 19 * (j + 1)) || (i == 0 && v.size() == 1); i++) {
@@ -403,6 +422,219 @@ void PassengerList::PaMPrintFlightInforMainInterface(const PassengerList* PL,
 		}
 	}
 	delete[] input;
+}
+
+void PassengerList::PaMPrintPassengerInforSearchInterface(char* c,
+	int& _count, vector<Passenger*>& passenger, vector<Passenger*>& pos) {
+	if (c[0] == '\0') {
+		_count = -1;
+		return;
+	}
+	for (int i = 0; i < 19; i++) {
+		gotoxy(7, 7 + i); std::cout << std::setw(3) << std::setfill(' ') << "";
+		gotoxy(23, 7 + i); std::cout << std::setw(12) << std::setfill(' ') << "";
+		gotoxy(66, 7 + i); std::cout << std::setw(35) << std::setfill(' ') << "";
+		gotoxy(108, 7 + i); std::cout << std::setw(9) << std::setfill(' ') << "";
+	}
+	int count = 0, j = 0;
+	pos.clear();
+	char* input = new char[100];
+	for (int i = 0; i < pCount; i++) {
+		string str = passenger[i]->sSID;
+		int found = str.find(c);
+		if (found != string::npos) {
+			if (count < 19) {
+				gotoxy(7, 7 + count); std::cout << count + 1;
+				gotoxy(23, 7 + count); std::cout << passenger[i]->sSID;
+				gotoxy(66, 7 + count); 
+				std::cout << passenger[i]->lastName << " "
+					<< passenger[i]->firstName;
+				gotoxy(108, 7 + count);
+				switch (passenger[i]->sex) {
+				case 0: {
+					std::cout << "NO-INFOR";
+					break;
+				}
+				case 1: {
+					std::cout << "  MALE";
+					break;
+				}
+				case 2: {
+					std::cout << " FEMALE";
+					break;
+				}
+				}
+			}
+			pos.push_back(passenger[i]);
+			count++;
+		}
+	}
+	_count = count;
+	gotoxy(103, 28); std::cout << 1 << "/" << count / 19 + 1;
+	delete[] input;
+}
+
+void PassengerList::PaMPrintPassengerInforSearchInterface(const char* c,
+	int _count, const vector<Passenger*>& passenger, int page) const {
+	for (int i = 0; i < 18; i++) {
+		gotoxy(7, 7 + i); std::cout << std::setw(3) << std::setfill(' ') << "";
+		gotoxy(23, 7 + i); std::cout << std::setw(12) << std::setfill(' ') << "";
+		gotoxy(66, 7 + i); std::cout << std::setw(35) << std::setfill(' ') << "";
+		gotoxy(108, 7 + i); std::cout << std::setw(9) << std::setfill(' ') << "";
+	}
+	int j = 0;
+	if (c[0] == '.' && _count == pCount) {
+		vector<Passenger*> v;
+		PaMPrintPassengerInforMainInterface(0, v);
+		return;
+	}
+	char* input = new char[100];
+	for (int i = 0; i < _count; i++) {
+		if (i >= 19 * page && i < 19 * (page + 1)) {
+			gotoxy(7, 7 + i % 19); std::cout << i + 1;
+			gotoxy(23, 7 + i % 19); std::cout << passenger[i]->sSID;
+			std::cout << passenger[i]->lastName << " "
+				<< passenger[i]->firstName;
+			gotoxy(108, 7 + i % 19);
+			switch (passenger[i]->sex) {
+			case 0: {
+				std::cout << "NO-INFOR";
+				break;
+			}
+			case 1: {
+				std::cout << "  MALE";
+				break;
+			}
+			case 2: {
+				std::cout << " FEMALE";
+				break;
+			}
+			}
+		}
+	}
+	gotoxy(103, 28); std::cout << page + 1 << "/" << _count / 19 + 1;
+	delete[] input;
+}
+
+void PassengerList::block_char_search_PaM(char* b, int a, int x, int y,
+	vector<Passenger*>& passenger, int function) {
+	passenger.clear();
+	addPassengerToVector(passenger);
+	vector<Passenger*> pos;
+	//showCur(0);
+editI:
+	b[0] = '\0';
+	int i = 0;
+	char inputChar;
+	int count1 = 0;
+search:
+	gotoxy(x, y);
+	while (1)
+	{
+		inputChar = _getch();
+		if (i < 12 && inputChar >= 48 && inputChar <= 57) {
+			gotoxy(x + i, y);
+			b[i] = inputChar;
+			std::cout << inputChar;
+			i++;
+			b[i] = '\0';
+			PaMPrintPassengerInforSearchInterface(b, count1, passenger, pos);
+			gotoxy(x + i, y);
+		}
+		if (inputChar == 8 && i > 0) {
+			gotoxy(x + i - 1, y);
+			std::cout << " ";
+			gotoxy(x + i - 1, y);
+			i--;
+			b[i] = '\0';
+			PaMPrintPassengerInforSearchInterface(b, count1, passenger, pos);
+			gotoxy(x + i, y);
+		}
+		if (inputChar == 8 && i == 0) {
+			PaMPrintPassengerInforMainInterface(0, pos);
+			showCur(1);
+			gotoxy(x, y);
+			//system("pause");
+		}
+		if (inputChar == 27) {
+			b[0] = '.';
+			b[1] = '\0';
+			return;
+		}
+		if (inputChar == 13) {
+			if (b[0] == '\0')
+				count1 = -1;
+			if (count1 == 0)
+				continue;
+			if (count1 == -1) {
+				count1 = getTotalPassenger();
+				pos = passenger;
+			}
+			showCur(0);
+			b[0] = '.';
+			b[1] = '\0';
+			int page = 0;
+			int count = count1 / 19;
+			int count2 = 0;
+		choose:
+			gotoxy(2, 7);
+			std::cout << "==>";
+			int key = 0;
+			char inputChar;
+			do {
+				inputChar = _getch();
+				if (inputChar == 72) {
+					if (key > 0) {
+						gotoxy(2, 7 + key); std::cout << "   ";
+						key--;
+						count2--;
+					}
+					else if (key == 0) {
+						if (page > 0 && page <= count) {
+							gotoxy(2, 7); std::cout << "   ";
+							page--;
+							PaMPrintPassengerInforSearchInterface(b, count1, pos, page);
+							gotoxy(x + i, y);
+							key = 18;
+							count2--;
+						}
+					}
+				}
+				else if (inputChar == 80) {
+					if (key < 18 && key < count1 - 1 && count2 < count1 - 1) {
+						//if (key)
+						gotoxy(2, 7 + key); std::cout << "   ";
+						key++;
+						count2++;
+					}
+					else if (key == 18) {
+						if (page < count) {
+							gotoxy(2, 25); std::cout << "   ";
+							page++;
+							count2++;
+							PaMPrintPassengerInforSearchInterface(b, count1, pos, page);
+							gotoxy(x + i, y);
+							goto choose;
+						}
+					}
+				}
+				if (inputChar == 13 && function != 0) {
+					/*if (function == 1)
+						PaMEditInterface(pos[count2], AC);*/
+					/*else
+						PaMDeleteInterface();*/
+					b[0] = '?';
+					b[1] = '\0';
+					return;
+				}
+				gotoxy(2, 7 + key);
+				cout << "==>";
+			} while (inputChar != 27);
+			b[0] = '.';
+			b[1] = '\0';
+			return;
+		}
+	}
 }
 
 // Passengers class definition

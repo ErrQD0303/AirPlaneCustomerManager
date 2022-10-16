@@ -129,13 +129,13 @@ void PassengerList::readPassengerFile() {
 		ifs.getline(input, 100, '\n');
 		ssid.assign(input);
 		ifs.getline(input, 100, '\n');
-		fN.assign(input);
-		ifs.getline(input, 100, '\n');
 		lN.assign(input);
 		ifs.getline(input, 100, '\n');
-		if (strcmp(input, "MALE") == 0)
+		fN.assign(input);
+		ifs.getline(input, 100, '\n');
+		if (strcmp(input, "1") == 0)
 			sex = (SEX)1;
-		else if (strcmp(input, "FEMALE") == 0)
+		else if (strcmp(input, "2") == 0)
 			sex = (SEX)2;
 		else
 			sex = (SEX)0;
@@ -157,8 +157,8 @@ void PassengerList::writePassengerFile(Passenger* subroot, std::ofstream& ofs) {
 		return;
 	if (subroot != root)
 		ofs << "\n";
-	ofs << subroot->sSID << "\n" << subroot->firstName << "\n"
-		<< subroot->lastName << "\n" << subroot->sex;
+	ofs << subroot->sSID << "\n" << subroot->lastName << "\n"
+		<< subroot->firstName << "\n" << subroot->sex;
 	writePassengerFile(subroot->left, ofs);
 	writePassengerFile(subroot->right, ofs);
 }

@@ -217,7 +217,10 @@ public:
 	void inOrderDFT(Passenger*, vector<Passenger*>&) const;
 	int getTotalPassenger() const;
 	char* getSSID(const Passenger*) const;
-	void PaMPrintFlightInforMainInterface(const PassengerList*, int, vector<Passenger*>&) const;
+	void PaMPrintPassengerInforMainInterface(int, vector<Passenger*>&) const;
+	void PaMPrintPassengerInforSearchInterface(char*, int&, vector<Passenger*>&, vector<Passenger*>&);
+	void PaMPrintPassengerInforSearchInterface(const char*, int, const vector<Passenger*>&, int) const;
+	void block_char_search_PaM(char*, int, int, int, vector<Passenger*>&, int);
 };
 typedef class PassengerList PASSENGERLIST;
 
