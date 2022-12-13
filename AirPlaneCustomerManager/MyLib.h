@@ -3,6 +3,7 @@
 #define MYLIB_H
 #include <iostream>
 #include <Windows.h>
+#include <mutex>
 
 void setWindowSize(SHORT width, SHORT height) {
 	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
