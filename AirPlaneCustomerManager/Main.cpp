@@ -25,7 +25,7 @@ int main() {
 			Sleep(1000);
 		}
 	};
-	///
+	///sdf
 	std::thread th1(f);
 	std::thread th2(MainMenu);
 	if (th1.joinable())
