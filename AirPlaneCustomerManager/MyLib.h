@@ -68,6 +68,15 @@ void gotoxy(SHORT posX, SHORT posY) {
 	SetConsoleCursorPosition(hStdout, Position);
 }
 
+void gotoxy1(SHORT posX, SHORT posY) {
+	HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD Position;
+	Position.X = posX;
+	Position.Y = posY;
+
+	SetConsoleCursorPosition(hStdout, Position);
+}
+
 void showCur(bool CursorVisibility) {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO ConCurInf;

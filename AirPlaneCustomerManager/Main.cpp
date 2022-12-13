@@ -6,6 +6,7 @@
 #include <string>
 #include "DataTypes.h"
 #include "FlightManager.h"
+#include <chrono>
 
 int main() {
 	//char c[100];
@@ -15,7 +16,20 @@ int main() {
 	//while (token != nullptr) {
 	//	std::cout << token << "\n";
 	//	token = std::strtok(NULL, " !");
-	PaMAddBox();
-	MainMenu();
+	auto f = []() {
+		std::mutex mlock;
+		std::lock_guard<std::mutex> lock(mlock);
+		int day = 0;
+		while (1) {
+			menuCurTime();
+			Sleep(1000);
+		}
+	};
+	std::thread th1(f);
+	std::thread th2(MainMenu);
+	if (th1.joinable())
+		th1.join();
+	if (th2.joinable())
+		th2.join();
 	return 0;
 }

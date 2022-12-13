@@ -7,6 +7,7 @@
 #include <conio.h>
 #include "PlaneTypeManager.h"
 #include "FlightManager.h"
+#include <thread>
 
 using namespace std;
 
@@ -25,7 +26,7 @@ main_menu:
 	menuCurTime();
 	char menu_option[9][100] = {
 	"1) Plane Type Management ",
-	"2) Plane Flight Management",
+	"2) Plane Flight Management ",
 	"3) Passenger Management ",
 	"4) Book & Cancle ",
 	"5) Flight List Statistics ",
@@ -146,10 +147,11 @@ main_menu:
 		PaMMainInterface(PL);
 		break;
 	}
-	case 9:
+	case 9: {
 		delete AC;
 		AC = nullptr;
 		return;
+	}
 	}
 	goto main_menu;
 }
